@@ -9,6 +9,13 @@
 **Entrada**: pedido en [prompt.md](prompt.md): que el turista pueda ordenar la lista de sitios por precio, de
 menor a mayor, además del orden por nombre, con los sitios sin precio conocido al final.
 
+## Clarifications
+
+### Session 2026-11-25
+
+- Q: ¿El selector debe ofrecer también ordenar por precio de mayor a menor, o basta con de menor a mayor? → A: Solo
+  de menor a mayor, más el orden por nombre.
+
 ## Escenarios de usuario y pruebas *(obligatorio)*
 
 ### Historia 1 - Ver primero los sitios más económicos (Prioridad: P1)
@@ -100,6 +107,6 @@ se mantiene al aplicar los filtros de municipio, categoría y búsqueda.
 
 ## Supuestos
 
-- Solo se ofrece el orden de menor a mayor; de mayor a menor queda fuera de alcance.
+- Solo se ofrece el orden de menor a mayor; de mayor a menor queda fuera de alcance (aclaración del 2026-11-25).
 - El precio de referencia es el que ya calcula la spec 001 (el menor precio conocido del sitio).
 - No se ordena por otros criterios (municipio, categoría, distancia).
