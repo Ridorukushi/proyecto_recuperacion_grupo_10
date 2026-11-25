@@ -45,4 +45,21 @@ con un README inicial en `main`. Creó y subió la rama `recuperacion/olaya`.
 **Qué hizo Claude:** instaló Spec Kit con integración para Claude:
 `uvx --from git+https://github.com/github/spec-kit.git specify init --here --integration claude --script ps`.
 Creó `CLAUDE.md` (memoria del proyecto), `.gitattributes` y este registro de prompts.
-**Resultado / commits:** `1df086e chore: instalar Spec Kit con integración para Claude Code` y el commit de documentación de esta sesión.
+**Resultado / commits:** `1df086e chore: instalar Spec Kit con integración para Claude Code` y
+`18e52dd docs: agregar CLAUDE.md, registro de prompts y .gitattributes`.
+
+### Prompt 6
+**Prompt (textual):**
+> con frontend y con backend. recuerde que debemos tener agentes, debemos tener los archivos promps, el plan, etc...
+
+**Qué hizo Claude:**
+- Ejecutó el flujo de la skill `speckit-constitution`: resolvió la plantilla con
+  `resolve-template.ps1` y redactó la constitución v1.0.0 con 5 principios. El stack quedó en
+  Angular, FastAPI, PostgreSQL y la API de Claude.
+- Creó 4 subagentes en `.claude/agents/`: `curador-datos`, `revisor-codigo`, `tester` y
+  `registrador-prompts`.
+- Creó la skill propia `datos-turisticos` en `.claude/skills/`.
+- Actualizó `CLAUDE.md`.
+
+**Resultado / commits:** commits `docs: ratificar constitución v1.0.0` y
+`feat: agregar subagentes y skill datos-turisticos`.

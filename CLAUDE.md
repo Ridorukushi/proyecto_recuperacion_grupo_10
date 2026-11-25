@@ -32,4 +32,15 @@ Las specs viven en `specs/NNN-nombre/` (spec.md, plan.md, tasks.md). La constitu
 - Idioma de la interfaz, documentación y commits: **español**.
 - Precios siempre en pesos colombianos (COP) y marcados como *aproximados*, con fecha de referencia.
 - Datos de sitios: solo información verificable; si un dato no se conoce, se deja vacío, no se inventa.
-- Stack técnico: se decide en `/speckit-plan` y se documenta aquí cuando esté aprobado.
+- Stack técnico (constitución v1.0.0): Angular en `frontend/`, FastAPI en `backend/`, PostgreSQL,
+  asistente IA con la API de Claude llamada solo desde el backend.
+
+## Agentes y skills del proyecto
+| Tipo | Nombre | Cuándo usarlo |
+|---|---|---|
+| Subagente | `curador-datos` | Agregar o revisar fichas de sitios turísticos con fuentes |
+| Subagente | `revisor-codigo` | Al terminar una tarea o antes de abrir un PR |
+| Subagente | `tester` | Escribir y correr pruebas desde los criterios de la spec |
+| Subagente | `registrador-prompts` | Al final de cada sesión, para actualizar `docs/prompts/` |
+| Skill | `datos-turisticos` | Formato y validación de una ficha de sitio |
+| Skills | `speckit-*` | Flujo de Spec-Driven Development |
