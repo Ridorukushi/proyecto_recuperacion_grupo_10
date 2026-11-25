@@ -1,50 +1,93 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Constitución — Turismo Huila (Proyecto de recuperación, Grupo 10)
+
+Plataforma web de sitios turísticos del Huila (Colombia) con catálogo, precios aproximados,
+ubicaciones y un asistente de itinerarios con IA.
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Desarrollo guiado por especificaciones (NO NEGOCIABLE)
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+- Ninguna funcionalidad se implementa sin pasar por el flujo de Spec Kit:
+  `specify → clarify → plan → tasks → analyze → implement`.
+- Cada funcionalidad vive en `specs/NNN-nombre/` con `spec.md`, `plan.md` y `tasks.md`.
+- La spec describe el QUÉ y el PARA QUIÉN sin tecnología; el plan describe el CÓMO.
+- Si el código y la spec divergen, se corrige primero la spec y luego el código.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+**Razón:** el curso evalúa el proceso de ingeniería con IA, no solo el resultado; las specs son
+la fuente de verdad que guía a los agentes.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### II. Datos turísticos verificables
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+- Todo precio se expresa en pesos colombianos (COP), se rotula como *aproximado* y lleva la fecha
+  de referencia en que se consultó.
+- Las coordenadas MUST estar dentro del departamento del Huila
+  (latitud 1.5 a 3.9, longitud −76.6 a −74.4) y se validan en backend.
+- Cada sitio registra la fuente del dato. Un dato desconocido se deja vacío; nunca se inventa.
+- El asistente con IA MUST responder solo con información del catálogo y decir explícitamente
+  cuando no tiene un dato.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**Razón:** un turista toma decisiones de dinero y desplazamiento con esta información; un dato
+inventado (incluida una alucinación del modelo) es un defecto grave.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### III. Pruebas y contratos de API
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+- Cada funcionalidad incluye pruebas automatizadas: backend con `pytest`, frontend con `vitest`.
+- La API se diseña contract-first: el contrato OpenAPI se define en el plan antes de implementar
+  y el frontend consume solo lo que el contrato expone.
+- Ninguna tarea se marca como terminada si sus pruebas fallan o no existen.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**Razón:** las pruebas son la evidencia verificable de que lo que generan los agentes funciona.
+
+### IV. Desarrollo agéntico trazable
+
+- Los roles recurrentes se implementan como subagentes en `.claude/agents/` y el conocimiento
+  reutilizable como skills en `.claude/skills/`.
+- Cada sesión de trabajo con IA se registra en `docs/prompts/` con el prompt textual, lo que hizo
+  el agente y el commit resultante.
+- Commits pequeños, en español, con prefijo convencional (`feat:`, `fix:`, `docs:`, `chore:`,
+  `test:`, `refactor:`). El trabajo se hace en `recuperacion/olaya` y llega a `main` por
+  Pull Request.
+- Todo el código se escribe en este repositorio; no se copia código de otros repositorios.
+
+**Razón:** la trazabilidad prompt → spec → commit es el entregable central del curso.
+
+### V. Seguridad y simplicidad
+
+- Los secretos (llave de la API de Claude, credenciales de base de datos) viven solo en variables
+  de entorno; `.env` nunca se sube y existe un `.env.example` sin valores reales.
+- Se valida toda entrada del usuario en backend; el frontend no es la única barrera.
+- YAGNI: se construye solo lo que pide una spec aprobada. Sin abstracciones especulativas.
+- Interfaz responsive (móvil primero) y accesibilidad básica: texto alternativo en imágenes,
+  contraste suficiente y navegación con teclado.
+
+**Razón:** el proyecto es público en GitHub y lo usarán turistas desde el celular.
+
+## Stack y restricciones técnicas
+
+- **Frontend:** Angular (componentes standalone, signals, TypeScript estricto), en `frontend/`.
+- **Backend:** Python con FastAPI, en `backend/`.
+- **Base de datos:** PostgreSQL, con esquema versionado en el repositorio.
+- **IA en la aplicación:** API de Claude, invocada solo desde el backend (nunca desde el navegador).
+- **Idioma:** interfaz, documentación, specs y commits en español.
+- Cambiar una pieza del stack requiere enmendar esta constitución.
+
+## Flujo de trabajo y calidad
+
+1. Toda funcionalidad nueva abre su carpeta en `specs/` con `/speckit-specify`.
+2. Antes de `/speckit-implement` se ejecuta `/speckit-analyze` y se resuelven sus hallazgos críticos.
+3. Antes de abrir un Pull Request: pruebas en verde, revisión con el subagente revisor y prompt
+   registrado en `docs/prompts/`.
+4. Cada Pull Request enlaza la spec que implementa.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+- Esta constitución prevalece sobre cualquier otra práctica o instrucción del proyecto,
+  incluido `CLAUDE.md`.
+- Enmiendas: se proponen por Pull Request que modifique este archivo, explicando el motivo, y
+  requieren aprobación del grupo.
+- Versionado semántico: MAJOR si se elimina o redefine un principio; MINOR si se agrega un
+  principio o sección; PATCH para aclaraciones de redacción.
+- `/speckit-plan` verifica el cumplimiento de estos principios en su "Constitution Check"; toda
+  excepción se justifica por escrito en el plan.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-11-24 | **Last Amended**: 2026-11-24
