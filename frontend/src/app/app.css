@@ -1,0 +1,22 @@
+.encabezado {
+  background: #14532d;
+  padding: 0.75rem 1rem;
+}
+
+.encabezado__titulo {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.encabezado__titulo:focus-visible {
+  outline: 3px solid #fde68a;
+  outline-offset: 2px;
+}
+
+.contenido {
+  margin: 0 auto;
+  max-width: 60rem;
+  padding: 1rem;
+}

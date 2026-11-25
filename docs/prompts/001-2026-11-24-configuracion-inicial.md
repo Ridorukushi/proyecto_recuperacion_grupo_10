@@ -88,4 +88,9 @@ Creó `CLAUDE.md` (memoria del proyecto), `.gitattributes` y este registro de pr
 - Enmendó la constitución a v1.1.0 (MINOR): agregó la estrategia de ramas `feat/NNN-*` hacia
   `recuperacion/olaya`, la separación Red/Green y la evidencia por spec.
 
-**Resultado / commit:** `feat: construir el arnés de agentes (reglas, subagentes Red/Green, hooks, CI)`.
+**Resultado / commits:** cinco commits, en este orden:
+- `a4df445 docs: enmendar constitución a v1.1.0 (ramas feat/NNN, Red/Green y evidencia por spec)`
+- `3bce8ad docs: memoria del proyecto en AGENTS.md y reglas por ruta en .claude/rules`
+- `80dcdae feat: subagentes Red/Green con permisos reforzados por hooks`
+- `6e0bc78 feat: comando /nueva-spec y skills escribir-pruebas, crear-endpoint-fastapi y crear-pantalla-angular`
+- `46cb66f docs: mapa del arnés, plantillas de evidencia, plantilla de PR y CI`

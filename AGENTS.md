@@ -21,7 +21,18 @@ El mapa completo del arnés (memoria, reglas, skills, agentes, hooks y evidencia
 - **Base de datos:** PostgreSQL. Esquema y migraciones versionados en `backend/`.
 - **IA:** API de Claude, llamada solo desde el backend.
 
-Los comandos exactos de cada parte se agregan aquí cuando `/speckit-plan` de la spec 001 los fije.
+### Comandos oficiales (fijados en el plan de la spec 001)
+| Para qué | Local (agentes y grupo) | CI |
+|---|---|---|
+| Pruebas backend | `cd backend && uv run pytest -q` | `python -m pytest -q` (con PostgreSQL 16 como servicio) |
+| Lint backend | `cd backend && uv run ruff check` | — |
+| Pruebas frontend | `cd frontend && npx ng test --watch=false` | igual |
+| Compilar frontend | `cd frontend && npm run build` | igual |
+| Pruebas de hooks | `node --test .claude/hooks/hooks.test.mjs` | igual |
+| Cargar catálogo (solo grupo u orquestador) | `cd backend && uv run python -m app.carga` | — |
+| Levantar la app | `cd backend && uv run uvicorn app.main:app --reload` y `cd frontend && npx ng serve` | — |
+
+Las pruebas del backend necesitan PostgreSQL 16 local y `backend/.env` (copiado de `backend/.env.example`).
 
 ## Ramas y flujo
 - `main`: versión entregable. Solo recibe Pull Requests desde `recuperacion/olaya`.

@@ -1,0 +1,69 @@
+<h1>Sitios turísticos del Huila</h1>
+
+<form class="filtros" role="search" (submit)="$event.preventDefault()">
+  <div class="campo">
+    <label for="busqueda">Buscar por nombre</label>
+    <input id="busqueda" type="search" maxlength="100" [value]="q()" (input)="escribir($event)" />
+  </div>
+
+  <div class="campo">
+    <label for="municipio">Municipio</label>
+    <select id="municipio" (change)="elegirMunicipio($event)">
+      <option value="" [selected]="municipio() === ''">Todos los municipios</option>
+      @for (m of filtros().municipios; track m.clave) {
+        <option [value]="m.clave" [selected]="m.clave === municipio()">{{ m.etiqueta }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="campo">
+    <label for="categoria">Categoría</label>
+    <select id="categoria" (change)="elegirCategoria($event)">
+      <option value="" [selected]="categoria() === ''">Todas las categorías</option>
+      @for (c of filtros().categorias; track c.clave) {
+        <option [value]="c.clave" [selected]="c.clave === categoria()">{{ c.etiqueta }}</option>
+      }
+    </select>
+  </div>
+</form>
+
+@if (errorFiltros()) {
+  <p class="aviso">No se pudieron cargar los filtros. La lista sigue disponible.</p>
+}
+
+@switch (estado()) {
+  @case ('cargando') {
+    <p role="status">Cargando sitios…</p>
+  }
+  @case ('error') {
+    <section role="alert">
+      @if (detalleError()) {
+        <p>{{ detalleError() }}</p>
+        <button type="button" (click)="limpiar()">Limpiar filtros</button>
+      } @else {
+        <p>No se pudo cargar la lista de sitios. Intenta de nuevo.</p>
+        <button type="button" (click)="cargar()">Reintentar</button>
+      }
+    </section>
+  }
+  @case ('listo') {
+    @if (tarjetas().length === 0) {
+      @if (hayFiltros()) {
+        <p>No hay sitios que coincidan con tu búsqueda.</p>
+        <button type="button" (click)="limpiar()">Limpiar filtros</button>
+      } @else {
+        <p>No hay sitios para mostrar.</p>
+      }
+    } @else {
+      <ul class="tarjetas">
+        @for (s of tarjetas(); track s.slug) {
+          <li class="tarjeta">
+            <h2><a [routerLink]="['/sitios', s.slug]">{{ s.nombre }}</a></h2>
+            <p>{{ s.municipio.etiqueta }} · {{ s.categoria.etiqueta }}</p>
+            <p class="precio">{{ precioDe(s.precio_referencia) }}</p>
+          </li>
+        }
+      </ul>
+    }
+  }
+}

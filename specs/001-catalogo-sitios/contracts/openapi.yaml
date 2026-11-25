@@ -1,0 +1,162 @@
+openapi: 3.1.0
+info:
+  title: API del catálogo de sitios turísticos del Huila
+  version: 0.1.0
+  description: >
+    Contrato de la spec 001-catalogo-sitios. Solo lectura. Todos los mensajes de error están en español
+    y tienen la forma {"detalle": "..."}.
+servers:
+  - url: /api
+paths:
+  /sitios:
+    get:
+      summary: Lista de sitios, ordenada por nombre (sin tildes ni mayúsculas)
+      description: Cubre CA-1, CA-5 (vacío), CA-10 a CA-13 y CA-15.
+      parameters:
+        - name: municipio
+          in: query
+          required: false
+          description: Clave del municipio (p. ej. `villavieja`). Debe existir.
+          schema: { type: string, maxLength: 60 }
+        - name: categoria
+          in: query
+          required: false
+          schema: { $ref: '#/components/schemas/ClaveCategoria' }
+        - name: q
+          in: query
+          required: false
+          description: >
+            Texto a buscar en el nombre; no distingue mayúsculas, minúsculas ni tildes.
+            Vacío o solo espacios equivale a no enviarlo.
+          schema: { type: string, maxLength: 100 }
+      responses:
+        '200':
+          description: Sitios que cumplen todos los filtros (puede ser una lista vacía).
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/SitioResumen' }
+        '422':
+          description: Municipio o categoría inexistente, o búsqueda de más de 100 caracteres.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+              example: { detalle: 'El municipio «xyz» no existe en el Huila.' }
+  /sitios/{slug}:
+    get:
+      summary: Ficha completa de un sitio
+      description: Cubre CA-6, CA-8, CA-9 y CA-20.
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string, example: desierto-de-la-tatacoa }
+      responses:
+        '200':
+          description: Ficha del sitio.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SitioDetalle' }
+        '404':
+          description: No existe un sitio con ese slug (o el slug tiene un formato inválido).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+              example: { detalle: 'Sitio no encontrado.' }
+  /filtros:
+    get:
+      summary: Municipios y categorías para los selectores de filtro
+      responses:
+        '200':
+          description: Listas ordenadas por etiqueta.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [municipios, categorias]
+                properties:
+                  municipios:
+                    type: array
+                    items: { $ref: '#/components/schemas/Opcion' }
+                  categorias:
+                    type: array
+                    items: { $ref: '#/components/schemas/Opcion' }
+components:
+  schemas:
+    ClaveCategoria:
+      type: string
+      enum: [arqueologia, naturaleza, aventura, cultura, religioso, gastronomia, termales]
+    Opcion:
+      type: object
+      required: [clave, etiqueta]
+      properties:
+        clave: { type: string, example: garzon }
+        etiqueta: { type: string, example: Garzón }
+    PrecioReferencia:
+      description: Menor precio conocido del sitio. null si no se conoce ninguno.
+      type: object
+      required: [valor_cop, varios, fecha_referencia_precio]
+      properties:
+        valor_cop: { type: integer, minimum: 0, example: 15000 }
+        varios:
+          type: boolean
+          description: true si el sitio tiene más de un precio conocido (el frontend antepone «Desde»).
+        fecha_referencia_precio: { type: string, format: date, example: '2026-11-24' }
+    SitioResumen:
+      type: object
+      required: [slug, nombre, municipio, categoria, precio_referencia]
+      properties:
+        slug: { type: string, example: desierto-de-la-tatacoa }
+        nombre: { type: string, example: Desierto de la Tatacoa }
+        municipio: { $ref: '#/components/schemas/Opcion' }
+        categoria: { $ref: '#/components/schemas/Opcion' }
+        precio_referencia:
+          oneOf:
+            - $ref: '#/components/schemas/PrecioReferencia'
+            - type: 'null'
+    Precio:
+      type: object
+      required: [concepto, valor_cop]
+      properties:
+        concepto: { type: string, example: Entrada adulto }
+        valor_cop: { type: integer, minimum: 0, example: 25000 }
+    SitioDetalle:
+      type: object
+      required:
+        - slug
+        - nombre
+        - municipio
+        - categoria
+        - descripcion
+        - latitud
+        - longitud
+        - horario
+        - como_llegar
+        - precios
+        - fecha_referencia_precio
+        - fuentes
+      properties:
+        slug: { type: string }
+        nombre: { type: string }
+        municipio: { $ref: '#/components/schemas/Opcion' }
+        categoria: { $ref: '#/components/schemas/Opcion' }
+        descripcion: { type: [string, 'null'], maxLength: 400 }
+        latitud: { type: number, minimum: 1.5, maximum: 3.9 }
+        longitud: { type: number, minimum: -76.6, maximum: -74.4 }
+        horario: { type: [string, 'null'], description: 'null = «No disponible»' }
+        como_llegar: { type: [string, 'null'], description: 'null = «No disponible»' }
+        precios:
+          type: array
+          description: Solo precios conocidos; lista vacía = «Precio no disponible».
+          items: { $ref: '#/components/schemas/Precio' }
+        fecha_referencia_precio: { type: [string, 'null'], format: date }
+        fuentes:
+          type: array
+          minItems: 1
+          items: { type: string, format: uri }
+    Error:
+      type: object
+      required: [detalle]
+      properties:
+        detalle: { type: string }

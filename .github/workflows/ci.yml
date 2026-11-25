@@ -23,6 +23,23 @@ jobs:
   backend:
     name: Backend (pytest)
     runs-on: ubuntu-latest
+    # Base PostgreSQL 16 desechable para las pruebas (spec 001, research D1).
+    # La clave no es un secreto: la base nace vacía y se destruye al terminar el job.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: turismo
+          POSTGRES_PASSWORD: turismo_ci
+          POSTGRES_DB: turismo_pruebas
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U turismo"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL_PRUEBAS: postgresql+psycopg://turismo:turismo_ci@localhost:5432/turismo_pruebas
     steps:
       - uses: actions/checkout@v4
       - name: Comprobar si existe el backend
