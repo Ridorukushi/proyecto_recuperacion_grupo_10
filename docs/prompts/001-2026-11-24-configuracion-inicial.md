@@ -61,5 +61,31 @@ Creó `CLAUDE.md` (memoria del proyecto), `.gitattributes` y este registro de pr
 - Creó la skill propia `datos-turisticos` en `.claude/skills/`.
 - Actualizó `CLAUDE.md`.
 
-**Resultado / commits:** commits `docs: ratificar constitución v1.0.0` y
-`feat: agregar subagentes y skill datos-turisticos`.
+**Resultado / commits:** `294ca40 docs: ratificar constitución v1.0.0` y
+`317e2c4 feat: agregar subagentes del proyecto y skill datos-turisticos`.
+
+### Prompt 7
+**Prompt (textual):**
+> si, aqui te dejo de un repositorio que les quedo bien el proyecto para que se guie de la estructura de las
+> cosas que ellos tenian https://github.com/juandadevp/cuentasclaras.git
+
+**Qué hizo Claude:**
+- Clonó el repositorio de referencia en una carpeta temporal fuera del proyecto y estudió **solo su
+  estructura**. No copió código ni textos: todo se redactó de nuevo para Angular, FastAPI y PostgreSQL.
+- Estructura que adoptó:
+  - memoria en `AGENTS.md`, importada desde `CLAUDE.md`;
+  - reglas por ruta en `.claude/rules/`;
+  - subagentes con roles Red/Green (`explorador`, `probador`, `implementador`, `revisor-pull-request`
+    y `revisor-seguridad`), que reemplazan a `tester` y `revisor-codigo`;
+  - hooks que hacen cumplir los permisos (`limitar-agente.mjs` y `proteger-secretos.mjs`, con 7 pruebas);
+  - `.claude/settings.json`;
+  - el comando `/nueva-spec`;
+  - las skills `escribir-pruebas`, `crear-endpoint-fastapi` y `crear-pantalla-angular`;
+  - evidencia por spec (`prompt.md`, `skills.md`, `revision.md`, con plantillas en `docs/plantillas/`);
+  - `docs/ARNES.md`, la plantilla de PR y el CI de GitHub Actions.
+- Diferencia con la referencia: aquí sí se usa Spec Kit, así que `/nueva-spec` encadena las skills
+  `speckit-*` con los subagentes.
+- Enmendó la constitución a v1.1.0 (MINOR): agregó la estrategia de ramas `feat/NNN-*` hacia
+  `recuperacion/olaya`, la separación Red/Green y la evidencia por spec.
+
+**Resultado / commit:** `feat: construir el arnés de agentes (reglas, subagentes Red/Green, hooks, CI)`.

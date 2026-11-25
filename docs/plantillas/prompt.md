@@ -1,0 +1,13 @@
+# NNN-nombre: prompt
+
+Pedido con el que el grupo arrancó la spec (AAAA-MM-DD), con la fórmula del curso:
+
+- **Qué quiero:** …
+- **Para quién:** …
+- **Contexto:** lo que ya existe y lo que encontró el `explorador`.
+- **Formato:** qué debe entregar el agente (spec con criterios CA-n, pantalla, endpoint…).
+- **Restricciones:** pruebas primero, español, sin datos inventados, sin dependencias nuevas salvo …
+
+**Skills que debe usar:** …
+
+**Aprobaciones:** quién aprobó la spec y el plan, y cuándo.
