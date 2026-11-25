@@ -2,6 +2,16 @@
 name: registrador-prompts
 description: Actualiza el registro de prompts en docs/prompts con los prompts textuales de la sesión, lo que hizo el agente y los commits resultantes. Úsalo al final de cada sesión de trabajo o antes de abrir un PR.
 tools: Read, Grep, Glob, Write, Edit, Bash
+hooks:
+  PreToolUse:
+    - matcher: "Edit|Write|MultiEdit|NotebookEdit"
+      hooks:
+        - type: command
+          command: "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/limitar-agente.mjs\" registrador-prompts"
+    - matcher: "Bash|PowerShell"
+      hooks:
+        - type: command
+          command: "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/limitar-agente.mjs\" registrador-prompts"
 model: haiku
 ---
 
