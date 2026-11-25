@@ -37,20 +37,20 @@ código.
 ## Fase 3: Green (implementación con `/speckit-implement`)
 
 ### US1: Orden por precio en la API
-- [ ] T007 [US1] En `backend/app/rutas/sitios.py`, agregar el parámetro `orden` (`nombre` por defecto) y, con `orden=precio`, ordenar la lista ya filtrada por la clave de `data-model.md` («Regla de orden por precio»: sin precio al final, `precio_referencia.valor_cop`, `sitio.nombre_normalizado`) — CA-1 a CA-4, CA-6
+- [X] T007 [US1] En `backend/app/rutas/sitios.py`, agregar el parámetro `orden` (`nombre` por defecto) y, con `orden=precio`, ordenar la lista ya filtrada por la clave de `data-model.md` («Regla de orden por precio»: sin precio al final, `precio_referencia.valor_cop`, `sitio.nombre_normalizado`) — CA-1 a CA-4, CA-6
 
 ### US2: Validación y selector
-- [ ] T008 [US2] En `backend/app/rutas/sitios.py`, rechazar un `orden` fuera de los valores de `data-model.md` `orden` con 422 y el mensaje de `research.md` D2 — CA-8
-- [ ] T009 [P] [US2] En `frontend/src/app/services/sitios.service.ts`, agregar `orden` a los filtros y enviarlo solo cuando es `precio` — CA-7
-- [ ] T010 [US2] En `frontend/src/app/pages/lista-sitios/lista-sitios.ts` y `.html`, agregar el signal `orden`, el `<select id="orden">` con etiqueta «Ordenar por», leerlo y escribirlo en la URL y reiniciarlo en «Limpiar filtros» (`research.md` D3) — CA-5, CA-6, CA-7, CA-9
+- [X] T008 [US2] En `backend/app/rutas/sitios.py`, rechazar un `orden` fuera de los valores de `data-model.md` `orden` con 422 y el mensaje de `research.md` D2 — CA-8
+- [X] T009 [P] [US2] En `frontend/src/app/services/sitios.service.ts`, agregar `orden` a los filtros y enviarlo solo cuando es `precio` — CA-7
+- [X] T010 [US2] En `frontend/src/app/pages/lista-sitios/lista-sitios.ts` y `.html`, agregar el signal `orden`, el `<select id="orden">` con etiqueta «Ordenar por», leerlo y escribirlo en la URL y reiniciarlo en «Limpiar filtros» (`research.md` D3) — CA-5, CA-6, CA-7, CA-9
 
-- [ ] T011 Ejecutar ambas suites, `uv run ruff check` y `npm run build` en verde y hacer commit `feat:`
+- [X] T011 Ejecutar ambas suites, `uv run ruff check` y `npm run build` en verde y hacer commit `feat:`
 
 ---
 
 ## Fase 4: Verificación
 
-- [ ] T012 Ejecutar `/speckit-converge` para comparar el código con la spec, el plan y estas tareas
+- [X] T012 Ejecutar `/speckit-converge` para comparar el código con la spec, el plan y estas tareas
 - [ ] T013 Recorrer los escenarios de `quickstart.md` con el catálogo real
 
 ---
