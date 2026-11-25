@@ -20,6 +20,13 @@ def _url_pruebas() -> str:
         url = dotenv_values(RAIZ_BACKEND / ".env").get("DATABASE_URL_PRUEBAS")
     if not url:
         pytest.fail("Falta DATABASE_URL_PRUEBAS (entorno o backend/.env) para las pruebas con PostgreSQL.")
+    # R6: las pruebas borran tablas; nunca deben correr contra una base que no sea de pruebas.
+    nombre_base = url.rsplit("/", 1)[-1].split("?")[0]
+    if "prueba" not in nombre_base.lower():
+        pytest.fail(
+            f"La base «{nombre_base}» no parece de pruebas (su nombre debe contener «prueba»). "
+            "Las pruebas borran datos: se niegan a correr."
+        )
     return url
 
 

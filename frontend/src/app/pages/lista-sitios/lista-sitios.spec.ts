@@ -232,6 +232,46 @@ describe('ListaSitios', () => {
     expect(selectConOpcion('neiva').value).toBe('');
   });
 
+  it('CA-15 (R4) un 422 muestra el detalle del servidor y permite limpiar filtros', async () => {
+    const detalle = 'El municipio «xyz» no existe en el Huila.';
+    fixture = TestBed.createComponent(ListaSitios);
+    fixture.detectChanges();
+    const lista = await esperarPeticiones(esLista);
+    lista.forEach((t) => t.flush({ detalle }, { status: 422, statusText: 'Unprocessable Entity' }));
+    http.match(esFiltros).forEach((t) => t.flush(FILTROS));
+    await asentar();
+
+    expect(texto()).toContain(detalle);
+    expect(texto()).not.toContain('Http failure');
+    const limpiar = botonConTexto(/Limpiar filtros/);
+
+    limpiar.click();
+    const nueva = await esperarPeticiones(esLista);
+    expect(parametros(nueva[0]).has('municipio')).toBe(false);
+    expect(parametros(nueva[0]).has('categoria')).toBe(false);
+    expect(parametros(nueva[0]).has('q')).toBe(false);
+    nueva.forEach((t) => t.flush([TATACOA]));
+    await asentar();
+
+    expect(texto()).toContain('Desierto de la Tatacoa');
+    expect(texto()).not.toContain(detalle);
+  });
+
+  it('CA-10 (R8) si los filtros fallan avisa y la lista sigue funcionando', async () => {
+    fixture = TestBed.createComponent(ListaSitios);
+    fixture.detectChanges();
+    const lista = await esperarPeticiones(esLista);
+    lista.forEach((t) => t.flush([TATACOA, BALNEARIO]));
+    http.match(esFiltros).forEach((t) => t.flush('fallo', { status: 500, statusText: 'Server Error' }));
+    await asentar();
+    http.match(esFiltros).forEach((t) => t.flush('fallo', { status: 500, statusText: 'Server Error' }));
+    await asentar();
+
+    expect(texto()).toContain('No se pudieron cargar los filtros');
+    expect(texto()).toContain('Desierto de la Tatacoa');
+    expect(texto()).toContain('Balneario Termal Los Lagos');
+  });
+
   it('CA-10 ofrece los municipios y categorías que entrega la API', async () => {
     await abrirConSitios([TATACOA]);
     const municipios = selectConOpcion('neiva');

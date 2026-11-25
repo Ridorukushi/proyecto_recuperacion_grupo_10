@@ -1,7 +1,7 @@
 """Pruebas de app.carga.cargar_catalogo: reglas de rechazo (CA-17, CA-18 y CA-19)."""
 
 import pytest
-from datos_prueba import ELIMINAR, ficha
+from datos_prueba import ELIMINAR, escribir_json, ficha
 from sqlalchemy import text
 
 
@@ -54,6 +54,7 @@ def test_ca17_bordes_aceptados(cargar, contar):
         ("nombre", ELIMINAR),
         ("nombre", ""),
         ("nombre", "a" * 121),
+        ("nombre", "¿¿??"),  # R3: sin letras ni dígitos produciría un slug vacío
         ("municipio", ELIMINAR),
         ("municipio", "bogota"),  # no es del Huila
         ("categoria", ELIMINAR),
@@ -149,16 +150,24 @@ def test_ca19_concepto_invalido(cargar, concepto):
 
 
 def test_ca19_nombre_repetido(cargar, contar):
-    """CA-19: dos fichas con el mismo nombre se rechazan."""
-    fichas = [ficha(nombre="Mismo Nombre"), ficha(nombre="Mismo Nombre")]
-    _cargar_y_fallar(cargar, fichas, "nombre|slug")
+    """CA-19 (R12): dos fichas con el mismo nombre se rechazan nombrando el campo «nombre»."""
+    from app.carga import ErrorCarga
+
+    with pytest.raises(ErrorCarga) as error:
+        cargar([ficha(nombre="Mismo Nombre"), ficha(nombre="Mismo Nombre")])
+    assert "nombre: repetido" in str(error.value)
     assert contar("sitio") == 0
 
 
 def test_ca19_slug_repetido(cargar, contar):
     """CA-19: nombres distintos que producen el mismo slug también se rechazan."""
-    fichas = [ficha(nombre="Café Huila"), ficha(nombre="Cafe  Huila")]
-    _cargar_y_fallar(cargar, fichas, "nombre|slug")
+    from app.carga import ErrorCarga
+
+    with pytest.raises(ErrorCarga) as error:
+        cargar([ficha(nombre="Café Huila"), ficha(nombre="Cafe  Huila")])
+    mensaje = str(error.value)
+    assert "slug: repetido" in mensaje  # R12: el campo exacto es «slug»
+    assert "nombre: repetido" not in mensaje
     assert contar("sitio") == 0
 
 
@@ -184,3 +193,73 @@ def test_carga_valida_guarda_sitios_precios_y_fuentes(cargar, sesion, contar):
     assert contar("fuente") == 2
     slug = sesion.execute(text("SELECT slug FROM sitio")).scalar_one()
     assert slug == "desierto-de-la-tatacoa"
+
+
+# ---------- Revisión: S4, R2, R1 ----------
+
+_URL_500 = "https://example.org/" + "a" * 480  # 500 caracteres exactos
+
+
+@pytest.mark.parametrize(
+    ("campo", "valor"),
+    [
+        ("horario", "h" * 201),
+        ("como_llegar", "c" * 501),
+        ("fuentes", ["https://example.org/" + "a" * 481]),  # 501 caracteres
+    ],
+)
+def test_ca18_largos_maximos_rechazados(cargar, contar, campo, valor):
+    """CA-18 (S4): horario > 200, como_llegar > 500 o URL de fuente > 500 se rechazan nombrando el campo."""
+    _cargar_y_fallar(cargar, [ficha(**{campo: valor})], campo)
+    assert contar("sitio") == 0
+
+
+def test_ca18_largos_maximos_exactos_aceptados(cargar, contar):
+    """CA-18 (S4, límite): horario de 200, como_llegar de 500 y URL de 500 caracteres son válidos."""
+    assert len(_URL_500) == 500
+    cargar([ficha(horario="h" * 200, como_llegar="c" * 500, fuentes=[_URL_500])])
+    assert contar("sitio") == 1
+
+
+def test_ca18_mensajes_en_espanol(cargar):
+    """CA-18 (R2): los mensajes de ErrorCarga están en español y nombran el campo."""
+    from app.carga import ErrorCarga
+
+    with pytest.raises(ErrorCarga) as fuera_de_rango:
+        cargar([ficha(latitud=10.0)])
+    mensaje = str(fuera_de_rango.value)
+    assert "latitud" in mensaje
+    assert "Input should" not in mensaje
+
+    with pytest.raises(ErrorCarga) as sin_nombre:
+        cargar([ficha(nombre=ELIMINAR)])
+    mensaje = str(sin_nombre.value)
+    assert "obligatorio" in mensaje
+    assert "Field required" not in mensaje
+
+
+def test_ca18_recarga_invalida_conserva_catalogo(cargar, motor, contar, tmp_path):
+    """CA-18 (R1): reemplazar_catalogo con JSON inválido lanza ErrorCarga y deja intacto el catálogo anterior."""
+    from app.carga import ErrorCarga, reemplazar_catalogo
+
+    cargar([ficha(nombre="Uno"), ficha(nombre="Dos"), ficha(nombre="Tres")])
+    assert contar("sitio") == 3
+    ruta_sitios, ruta_municipios = escribir_json(tmp_path, [ficha(nombre="Nuevo"), ficha(latitud=10.0)])
+    with pytest.raises(ErrorCarga, match="latitud"):
+        reemplazar_catalogo(motor, ruta_sitios, ruta_municipios)
+    assert contar("sitio") == 3
+    assert contar("municipio") == 5
+
+
+def test_ca18_reemplazar_catalogo_valido(cargar, motor, sesion, contar, tmp_path):
+    """CA-18 (R1, camino feliz): reemplazar_catalogo con JSON válido deja exactamente los sitios nuevos."""
+    from app.carga import reemplazar_catalogo
+
+    cargar([ficha(nombre="Uno"), ficha(nombre="Dos"), ficha(nombre="Tres")])
+    ruta_sitios, ruta_municipios = escribir_json(tmp_path, [ficha(nombre="Nuevo A"), ficha(nombre="Nuevo B")])
+    reemplazar_catalogo(motor, ruta_sitios, ruta_municipios)
+    assert contar("sitio") == 2
+    assert contar("fuente") == 2
+    sesion.rollback()
+    nombres = sorted(sesion.execute(text("SELECT nombre FROM sitio")).scalars().all())
+    assert nombres == ["Nuevo A", "Nuevo B"]

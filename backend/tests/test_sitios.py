@@ -291,6 +291,49 @@ def test_ca15_busqueda_larga_422(cliente, catalogo_semilla):
     _es_error_claro(cliente.get("/api/sitios", params={"q": "a" * 101}), "100")
 
 
+def test_ca15_busqueda_con_caracter_de_control_422(cliente, catalogo_semilla):
+    """CA-15 (S1): q con un carácter de control (%00) responde 422 con exactamente {"detalle": <texto>}."""
+    _es_error_claro(cliente.get("/api/sitios?q=%00"))
+
+
+@pytest.mark.parametrize(
+    ("parametro", "valor"),
+    [
+        ("municipio", "a" * 61),
+        ("categoria", "a" * 61),
+        ("municipio", "Neiva Huila"),
+        ("municipio", "NEIVA"),
+        ("categoria", "Cultura"),
+    ],
+)
+def test_ca15_municipio_o_categoria_largos_422(cliente, catalogo_semilla, parametro, valor):
+    """CA-15 (S2): más de 60 caracteres, mayúsculas o espacios dan 422 sin repetir el valor largo."""
+    r = cliente.get("/api/sitios", params={parametro: valor})
+    _es_error_claro(r)
+    if len(valor) > 60:
+        assert valor not in r.json()["detalle"]
+
+
+def test_error_inesperado_500_en_espanol(bd_limpia):
+    """H9 (S7): un error inesperado responde 500 con mensaje en español, sin detalles internos."""
+    from fastapi.testclient import TestClient
+
+    from app.db import obtener_sesion
+    from app.main import app
+
+    def _sesion_rota():
+        raise RuntimeError("fallo interno secreto")
+        yield  # pragma: no cover
+
+    app.dependency_overrides[obtener_sesion] = _sesion_rota
+    try:
+        r = TestClient(app, raise_server_exceptions=False).get("/api/sitios")
+    finally:
+        app.dependency_overrides.pop(obtener_sesion, None)
+    assert r.status_code == 500
+    assert r.json() == {"detalle": "Error interno. Intenta más tarde."}
+
+
 # ---------- /api/filtros ----------
 
 

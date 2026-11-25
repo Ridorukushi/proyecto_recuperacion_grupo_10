@@ -28,6 +28,10 @@ describe('formatearPrecio', () => {
     expect(formatearPrecio(10000, '2026-12-31')).toBe('$10.000 COP (aprox., consultado en dic. 2026)');
   });
 
+  it('CA-2 (R7) sin fecha de consulta no inventa la fecha', () => {
+    expect(formatearPrecio(25000, null)).toBe('$25.000 COP (aprox.)');
+  });
+
   it('CA-3 precio no disponible', () => {
     expect(formatearPrecio(null, null)).toBe('Precio no disponible');
     expect(formatearPrecio(null, '2026-11-24')).toBe('Precio no disponible');
