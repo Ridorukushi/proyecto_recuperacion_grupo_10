@@ -36,4 +36,5 @@ Pedido con el que el grupo arrancó la spec (2026-11-24), con la fórmula del cu
 `crear-pantalla-angular` y las `speckit-*`.
 
 **Aprobaciones:** prompt aprobado por el grupo el 2026-11-24. Spec aprobada por el grupo el 2026-11-24
-(después de `/speckit-clarify`). Plan: pendiente.
+(después de `/speckit-clarify`). Plan aprobado por el grupo el 2026-11-24, con dos decisiones del grupo:
+PostgreSQL como servicio en el CI y el orquestador prepara el esqueleto del proyecto con permiso en cada comando.
