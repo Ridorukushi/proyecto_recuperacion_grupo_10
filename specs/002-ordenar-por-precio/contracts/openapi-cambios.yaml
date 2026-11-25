@@ -1,0 +1,23 @@
+# Cambios al contrato de la spec 001 (specs/001-catalogo-sitios/contracts/openapi.yaml).
+# Solo se agrega un parámetro a GET /api/sitios; el resto del contrato no cambia.
+paths:
+  /sitios:
+    get:
+      parameters:
+        - name: orden
+          in: query
+          required: false
+          description: >
+            Criterio de orden. «nombre» (predeterminado) ordena por nombre sin tildes ni mayúsculas.
+            «precio» ordena por precio de referencia de menor a mayor; los sitios sin precio van al final,
+            ordenados por nombre; los empates se resuelven por nombre. Cubre CA-1 a CA-8 de la spec 002.
+          schema:
+            type: string
+            enum: [nombre, precio]
+            default: nombre
+      responses:
+        '422':
+          description: Además de los casos de la spec 001, un valor de «orden» que no es «nombre» ni «precio».
+          content:
+            application/json:
+              example: { detalle: 'El orden «xyz» no es válido. Usa «nombre» o «precio».' }

@@ -4,7 +4,7 @@
 
 **Creada**: 2026-11-25
 
-**Estado**: Borrador
+**Estado**: Aprobada (2026-11-25)
 
 **Entrada**: pedido en [prompt.md](prompt.md): que el turista pueda ordenar la lista de sitios por precio, de
 menor a mayor, además del orden por nombre, con los sitios sin precio conocido al final.
