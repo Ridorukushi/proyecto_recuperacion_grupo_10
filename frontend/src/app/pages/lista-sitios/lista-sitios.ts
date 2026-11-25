@@ -30,13 +30,14 @@ export class ListaSitios {
   protected readonly municipio = signal('');
   protected readonly categoria = signal('');
   protected readonly q = signal('');
+  protected readonly orden = signal<'nombre' | 'precio'>('nombre');
 
   protected readonly errorFiltros = signal(false);
   /** Mensaje del servidor cuando responde 422 (filtros inválidos); vacío en otros errores. */
   protected readonly detalleError = signal('');
 
   protected readonly tarjetas = signal<SitioResumen[]>([]);
-  protected readonly hayFiltros = computed(() => !!(this.municipio() || this.categoria() || this.q().trim()));
+  protected readonly hayFiltros = computed(() => !!(this.municipio() || this.categoria() || this.q().trim() || this.orden() !== 'nombre'));
 
   protected readonly precioDe = formatearPrecioReferencia;
 
@@ -45,6 +46,7 @@ export class ListaSitios {
     this.municipio.set(parametros.get('municipio') ?? '');
     this.categoria.set(parametros.get('categoria') ?? '');
     this.q.set(parametros.get('q') ?? '');
+    this.orden.set(parametros.get('orden') === 'precio' ? 'precio' : 'nombre');
 
     inject(DestroyRef).onDestroy(() => {
       this.pendiente?.unsubscribe();
@@ -68,6 +70,11 @@ export class ListaSitios {
     this.cargar();
   }
 
+  protected elegirOrden(evento: Event): void {
+    this.orden.set((evento.target as HTMLSelectElement).value === 'precio' ? 'precio' : 'nombre');
+    this.cargar();
+  }
+
   /** La búsqueda por texto espera 300 ms sin teclear antes de pedir la lista. */
   protected escribir(evento: Event): void {
     this.q.set((evento.target as HTMLInputElement).value);
@@ -79,6 +86,7 @@ export class ListaSitios {
     this.municipio.set('');
     this.categoria.set('');
     this.q.set('');
+    this.orden.set('nombre');
     this.cargar();
   }
 
@@ -86,13 +94,14 @@ export class ListaSitios {
     clearTimeout(this.temporizador);
     this.pendiente?.unsubscribe();
     this.estado.set('cargando');
-    const filtros = { municipio: this.municipio(), categoria: this.categoria(), q: this.q() };
+    const filtros = { municipio: this.municipio(), categoria: this.categoria(), q: this.q(), orden: this.orden() };
     void this.router.navigate([], {
       relativeTo: this.ruta,
       queryParams: {
         municipio: filtros.municipio || null,
         categoria: filtros.categoria || null,
         q: filtros.q.trim() || null,
+        orden: filtros.orden === 'precio' ? 'precio' : null,
       },
       replaceUrl: true,
     });

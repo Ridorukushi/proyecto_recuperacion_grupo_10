@@ -24,6 +24,7 @@ router = APIRouter(prefix="/api")
 
 MAX_BUSQUEDA = 100
 MAX_CLAVE = 60
+ORDENES = ("nombre", "precio")
 PATRON_CLAVE = re.compile(r"^[a-z0-9-]+$")
 PATRON_SLUG =re.compile(r"^[a-z0-9-]{1,120}$")
 
@@ -40,6 +41,23 @@ def _precio_referencia(sitio: Sitio) -> PrecioReferencia | None:
         varios=len(sitio.precios) > 1,
         fecha_referencia_precio=sitio.fecha_referencia_precio,
     )
+
+
+def _clave_precio(sitio: Sitio) -> tuple[bool, int, str]:
+    """Sin precio de referencia al final; luego precio ascendente; luego nombre normalizado."""
+    ref = _precio_referencia(sitio)
+    return (ref is None, ref.valor_cop if ref else 0, normalizar(sitio.nombre))
+
+
+def _ordenar(sitios: list[Sitio], orden: str | None) -> list[Sitio]:
+    """«nombre» conserva el orden del repositorio; «precio» reordena la lista ya filtrada."""
+    return sorted(sitios, key=_clave_precio) if orden == "precio" else sitios
+
+
+def _validar_orden(orden: str | None) -> None:
+    if orden is not None and orden not in ORDENES:
+        valor = f" «{orden}»" if len(orden) <= MAX_CLAVE else ""
+        raise HTTPException(422, f"El orden{valor} no es válido. Usa «nombre» o «precio».")
 
 
 def _resumen(sitio: Sitio) -> SitioResumen:
@@ -79,7 +97,9 @@ def listar_sitios(
     municipio: Annotated[str | None, Query()] = None,
     categoria: Annotated[str | None, Query()] = None,
     q: Annotated[str | None, Query()] = None,
+    orden: Annotated[str | None, Query()] = "nombre",
 ):
+    _validar_orden(orden)
     if q is not None:
         if len(q) > MAX_BUSQUEDA:
             raise HTTPException(422, f"El parámetro «q» no puede superar los {MAX_BUSQUEDA} caracteres.")
@@ -100,7 +120,8 @@ def listar_sitios(
         )
     if municipio and municipio not in {m.clave for m in repositorio.listar_municipios(sesion)}:
         raise HTTPException(422, f"El municipio «{municipio}» no existe en el Huila.")
-    return [_resumen(s) for s in repositorio.listar_sitios(sesion, municipio, categoria, q)]
+    sitios = repositorio.listar_sitios(sesion, municipio, categoria, q)
+    return [_resumen(s) for s in _ordenar(sitios, orden)]
 
 
 @router.get(

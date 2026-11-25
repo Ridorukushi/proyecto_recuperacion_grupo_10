@@ -14,6 +14,7 @@ export class SitiosService {
     if (filtros.municipio) params = params.set('municipio', filtros.municipio);
     if (filtros.categoria) params = params.set('categoria', filtros.categoria);
     if (filtros.q?.trim()) params = params.set('q', filtros.q);
+    if (filtros.orden === 'precio') params = params.set('orden', 'precio');
     return this.http.get<SitioResumen[]>(`${API}/sitios`, { params });
   }
 
