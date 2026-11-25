@@ -86,10 +86,11 @@ def catalogo_semilla(cargar):
 @pytest.fixture
 def cliente(bd_limpia):
     """TestClient con la dependencia de sesión apuntando a la base de pruebas."""
-    from app.db import obtener_sesion
-    from app.main import app
     from fastapi.testclient import TestClient
     from sqlalchemy.orm import Session
+
+    from app.db import obtener_sesion
+    from app.main import app
 
     def _sesion_de_prueba():
         with Session(bd_limpia) as s:
