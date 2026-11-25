@@ -1,0 +1,167 @@
+[
+  {
+    "nombre": "Desierto de la Tatacoa",
+    "municipio": "villavieja",
+    "categoria": "naturaleza",
+    "descripcion": "Zona árida de formaciones rojizas y grises cerca de Villavieja, conocida por sus fósiles y por sus cielos despejados para observar estrellas. Cuenta con observatorios astronómicos y un museo de historia natural.",
+    "latitud": 3.23,
+    "longitud": -75.17,
+    "precios": [
+      { "concepto": "Entrada Museo de Historia Natural (dato de 2024)", "valor_cop": 10000 }
+    ],
+    "fecha_referencia_precio": "2026-11-24",
+    "horario": null,
+    "como_llegar": "Desde Neiva se toma un bus a Villavieja (cerca de 1 hora); allí un mototaxi o taxi lleva a la entrada del desierto en unos 15 minutos.",
+    "fuentes": [
+      "https://es.wikipedia.org/wiki/Desierto_de_la_Tatacoa",
+      "https://canaltrece.com.co/editorial/desierto-de-la-tatacoa-villavieja/"
+    ]
+  },
+  {
+    "nombre": "Parque Arqueológico de San Agustín",
+    "municipio": "san-agustin",
+    "categoria": "arqueologia",
+    "descripcion": "Conjunto de esculturas y tumbas monumentales de una cultura antigua del alto Magdalena, ubicado cerca del casco urbano de San Agustín. El mismo boleto cubre también el Alto de las Piedras y el Alto de los Ídolos.",
+    "latitud": 1.88444,
+    "longitud": -76.29611,
+    "precios": [
+      { "concepto": "Entrada adulto nacional (dato de 2024)", "valor_cop": 45000 },
+      { "concepto": "Entrada estudiante (dato de 2024)", "valor_cop": 20000 },
+      { "concepto": "Entrada extranjero (dato de 2024)", "valor_cop": 65000 }
+    ],
+    "fecha_referencia_precio": "2026-11-24",
+    "horario": "8:00 a. m. a 3:00 p. m.",
+    "como_llegar": "El parque está a unos 2 km del casco urbano de San Agustín. Desde Neiva (221 km) o Pitalito (30 km) se llega por carretera.",
+    "fuentes": [
+      "https://es.wikipedia.org/wiki/Parque_arqueológico_de_San_Agustín",
+      "https://colombia.travel/es/san-agustin"
+    ]
+  },
+  {
+    "nombre": "Estrecho del Magdalena",
+    "municipio": "san-agustin",
+    "categoria": "naturaleza",
+    "descripcion": "Tramo en el que el río Magdalena se angosta entre rocas hasta pasar por un canal de unos 2,2 metros de ancho. Queda a pocos kilómetros de San Agustín.",
+    "latitud": 1.9275,
+    "longitud": -76.3,
+    "precios": [],
+    "fecha_referencia_precio": null,
+    "horario": null,
+    "como_llegar": null,
+    "fuentes": [
+      "https://es.wikipedia.org/wiki/Estrecho_del_Magdalena"
+    ]
+  },
+  {
+    "nombre": "Parque Nacional Natural Cueva de los Guácharos",
+    "municipio": "acevedo",
+    "categoria": "naturaleza",
+    "descripcion": "Área protegida de bosques andinos y páramo, la más antigua del sistema de parques nacionales de Colombia. Debe su nombre al guácharo, un ave nocturna que habita en sus cuevas.",
+    "latitud": 1.55,
+    "longitud": -76.13333,
+    "precios": [],
+    "fecha_referencia_precio": null,
+    "horario": null,
+    "como_llegar": null,
+    "fuentes": [
+      "https://es.wikipedia.org/wiki/Parque_nacional_natural_Cueva_de_los_Guácharos"
+    ]
+  },
+  {
+    "nombre": "Embalse de Betania",
+    "municipio": "yaguara",
+    "categoria": "naturaleza",
+    "descripcion": "Gran embalse sobre el río Magdalena compartido por Campoalegre, Hobo y Yaguará. Está a unos 36 km de Neiva.",
+    "latitud": 2.685,
+    "longitud": -75.44,
+    "precios": [],
+    "fecha_referencia_precio": null,
+    "horario": null,
+    "como_llegar": null,
+    "fuentes": [
+      "https://es.wikipedia.org/wiki/Embalse_de_Betania"
+    ]
+  },
+  {
+    "nombre": "Salto de Bordones",
+    "municipio": "isnos",
+    "categoria": "naturaleza",
+    "descripcion": "Caída de agua de unos 400 metros de altura aproximada, en límites de Isnos, Saladoblanco y Pitalito. Hay un parador mirador y un sendero que baja hasta la base.",
+    "latitud": 2.01333,
+    "longitud": -76.16917,
+    "precios": [],
+    "fecha_referencia_precio": null,
+    "horario": null,
+    "como_llegar": "Queda a unos 15 km del casco urbano de Isnos.",
+    "fuentes": [
+      "https://es.wikipedia.org/wiki/Salto_de_Bordones"
+    ]
+  },
+  {
+    "nombre": "Termales de Rivera",
+    "municipio": "rivera",
+    "categoria": "termales",
+    "descripcion": "Centro recreacional con piscinas de aguas termales y tobogán, administrado por Comfamiliar Huila, en la vía Neiva - Rivera.",
+    "latitud": 2.75696,
+    "longitud": -75.23949,
+    "precios": [
+      { "concepto": "Entrada categoría A (afiliado Comfamiliar)", "valor_cop": 15000 },
+      { "concepto": "Entrada categoría B (afiliado Comfamiliar)", "valor_cop": 18000 },
+      { "concepto": "Entrada categoría C (afiliado Comfamiliar)", "valor_cop": 25000 },
+      { "concepto": "Entrada particular (no afiliado)", "valor_cop": 30000 }
+    ],
+    "fecha_referencia_precio": "2026-11-24",
+    "horario": null,
+    "como_llegar": "Desde Neiva, bus a Rivera (25 a 30 minutos); desde la plaza de Rivera, mototaxi o taxi hasta la entrada. Dirección: Rivera, km 20 vía Neiva - Rivera.",
+    "fuentes": [
+      "https://lastermalesderivera.com",
+      "https://www.hotspringsguides.com/hot-springs/las-termales-de-rivera-colombia"
+    ]
+  },
+  {
+    "nombre": "Catedral de San Miguel Arcángel de Garzón",
+    "municipio": "garzon",
+    "categoria": "religioso",
+    "descripcion": "Catedral de la diócesis de Garzón, ciudad conocida como capital diocesana del Huila y por sus procesiones de Semana Santa.",
+    "latitud": 2.19538,
+    "longitud": -75.62725,
+    "precios": [],
+    "fecha_referencia_precio": null,
+    "horario": null,
+    "como_llegar": null,
+    "fuentes": [
+      "https://gcatholic.org/churches/southamerica/4898"
+    ]
+  },
+  {
+    "nombre": "Basílica de Nuestra Señora de las Mercedes de Nátaga",
+    "municipio": "nataga",
+    "categoria": "religioso",
+    "descripcion": "Basílica menor y lugar de peregrinación mariana en Nátaga, municipio llamado la Capital Religiosa del Huila.",
+    "latitud": 2.54389,
+    "longitud": -75.80861,
+    "precios": [],
+    "fecha_referencia_precio": null,
+    "horario": null,
+    "como_llegar": null,
+    "fuentes": [
+      "https://es.wikipedia.org/wiki/Nátaga"
+    ]
+  },
+  {
+    "nombre": "Catedral de la Inmaculada Concepción de Neiva",
+    "municipio": "neiva",
+    "categoria": "religioso",
+    "descripcion": "Catedral de estilo gótico frente al Parque Santander, en el centro de Neiva, terminada en la década de 1960.",
+    "latitud": 2.92575,
+    "longitud": -75.28925,
+    "precios": [],
+    "fecha_referencia_precio": null,
+    "horario": null,
+    "como_llegar": "Está en el centro de Neiva, junto al Parque Santander.",
+    "fuentes": [
+      "https://es.wikipedia.org/wiki/Neiva",
+      "https://gcatholic.org/churches/southamerica/5922"
+    ]
+  }
+]
