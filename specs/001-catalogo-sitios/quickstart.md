@@ -5,8 +5,22 @@ Cómo comprobar de punta a punta que la spec funciona. El contrato está en
 
 ## Requisitos previos
 - Python 3.12 y `uv`; Node 22 y npm; PostgreSQL 16 instalado en el computador.
-- Dos bases vacías: `turismo` (para usar la app) y `turismo_pruebas` (para las pruebas).
-- `backend/.env`, copiado de `backend/.env.example` y llenado por cada persona. Ningún agente lo lee.
+- Dos bases vacías: `turismo` (para usar la app) y `turismo_pruebas` (para las pruebas). El nombre de la base de
+  pruebas debe contener «prueba»: las pruebas se niegan a correr si no.
+- Un usuario propio del proyecto, dueño de las dos bases (en Windows, `psql` está en
+  `C:\Program Files\PostgreSQL\<versión>\bin\psql.exe`):
+  ```powershell
+  $psql = "C:\Program Files\PostgreSQL\17\bin\psql.exe"
+  $clave = Read-Host "Clave nueva para el usuario turismo (solo letras y numeros)"
+  & $psql -U postgres -c "CREATE ROLE turismo LOGIN PASSWORD '$clave';"
+  & $psql -U postgres -c "ALTER DATABASE turismo OWNER TO turismo;"
+  & $psql -U postgres -c "ALTER DATABASE turismo_pruebas OWNER TO turismo;"
+  ```
+- `backend/.env`, con las variables de `backend/.env.example` y el usuario `turismo`. Lo crea cada persona en la
+  misma terminal, para que la clave no se teclee dos veces. Ningún agente lo lee:
+  ```powershell
+  Set-Content -Path backend\.env -Encoding ascii -Value "DATABASE_URL=postgresql+psycopg://turismo:$clave@localhost:5432/turismo","DATABASE_URL_PRUEBAS=postgresql+psycopg://turismo:$clave@localhost:5432/turismo_pruebas","ORIGENES_PERMITIDOS=http://localhost:4200"
+  ```
 
 ## Preparar (una vez)
 ```powershell
