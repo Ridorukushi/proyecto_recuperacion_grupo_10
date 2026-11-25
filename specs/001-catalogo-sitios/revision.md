@@ -9,7 +9,7 @@
 | `4527c45` | Preparación: backend, Angular 21, PostgreSQL en el CI y comandos oficiales. |
 | `a35851d` | Datos: 37 municipios y 10 sitios con fuentes (`curador-datos`). |
 | `1776bc4` | **Red:** 91 casos pytest y 35 `it` de vitest, sin código. |
-| `…` | **Green:** implementación. |
+| `edac5e3` | **Green:** implementación (`implementador`, sin vueltas de corrección). |
 | `…` | Arreglos tras la revisión. |
 
 ## Evidencia del Red
@@ -45,6 +45,28 @@ DELETE → 405). Sin prueba automática, como dice el plan: CE-001, CE-004, CE-0
 nombres de tablas del modelo de datos; `crear_motor`, `crear_esquema` y `obtener_sesion` en `app/db.py`; mensajes
 de `ErrorCarga` y de 422 que incluyen el nombre del campo; textos /cargando/i, /no se pudo|error/i y /reintentar/i;
 enlace `a[href="/sitios"]` para volver; dos `<select>` con `value` = clave.
+
+## Evidencia del Green
+Ejecutado por el orquestador el 2026-11-24, después del informe del `implementador`.
+
+| Comando | Resultado |
+|---|---|
+| `cd backend && uv run pytest -q` | **91 passed**, 1 warning (aviso de FastAPI sobre `httpx` en `TestClient`; no es nuestro) |
+| `cd frontend && npx ng test --watch=false` | **37 passed** (6 archivos) |
+| `cd frontend && npm run build` | Compila sin errores |
+| `cd backend && uv run ruff check` | 1 aviso I001 en `backend/tests/conftest.py` (imports sin ordenar, archivo de prueba) |
+
+**Bloqueo de entorno (no de código):** en el primer intento, 76 pruebas del backend no corrieron porque faltaba
+`backend/.env`, y después porque la clave de `postgres` guardada no coincidía. Se resolvió creando un usuario
+`turismo`, dueño de las bases `turismo` y `turismo_pruebas`, con su clave escrita en `.env` desde la misma variable.
+No cuenta como vuelta de corrección del `implementador`.
+
+**Decisiones del `implementador`:**
+- Los mensajes de `ErrorCarga` conservan el texto de Pydantic (en inglés). Solo los ve quien carga el catálogo,
+  no el turista.
+- Si un sitio no tiene precios conocidos, `fecha_referencia_precio` se guarda en `NULL`.
+- El orden usa `COLLATE "C"` sobre `nombre_normalizado`.
+- Los filtros se escriben en la URL con `replaceUrl`, así que el botón Atrás no los restaura (YAGNI).
 
 ## Decisiones del grupo durante la spec
 | # | Decisión | Razón |
