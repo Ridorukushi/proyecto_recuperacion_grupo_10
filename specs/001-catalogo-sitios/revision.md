@@ -10,7 +10,7 @@
 | `a35851d` | Datos: 37 municipios y 10 sitios con fuentes (`curador-datos`). |
 | `1776bc4` | **Red:** 91 casos pytest y 35 `it` de vitest, sin código. |
 | `edac5e3` | **Green:** implementación (`implementador`, sin vueltas de corrección). |
-| `…` | Arreglos tras la revisión. |
+| `2e7ec1e` · `558308b` | Arreglos tras la revisión: Red (`test:`) y Green (`fix:`), en verde a la primera vuelta. |
 
 ## Evidencia del Red
 Ejecutado por el orquestador el 2026-11-24, después del informe del `probador`.
@@ -80,25 +80,25 @@ del orquestador. Los aceptados se corrigen en otra vuelta Red → Green (commits
 
 | # | Revisor | Sev. | Hallazgo | Decisión |
 |---|---|---|---|---|
-| R1 | `revisor-pull-request` | Alta | `python -m app.carga` borra las tablas antes de validar; si una ficha falla, el catálogo anterior se pierde. | **Aceptado** (pendiente de commit) |
-| R2 | `revisor-pull-request` | Media | Mensajes de `ErrorCarga` en inglés (texto de Pydantic). | **Aceptado** (pendiente de commit) |
-| R3 | `revisor-pull-request` | Media | Un nombre sin letras ni dígitos produce un slug vacío y un error de BD sin formato. | **Aceptado** (pendiente de commit) |
-| R4 | `revisor-pull-request` | Media | Con un filtro inválido en la URL, «Reintentar» repite el 422 y el turista queda atrapado. | **Aceptado** (pendiente de commit) |
+| R1 | `revisor-pull-request` | Alta | `python -m app.carga` borra las tablas antes de validar; si una ficha falla, el catálogo anterior se pierde. | **Aceptado** (`2e7ec1e` test, `558308b` fix) |
+| R2 | `revisor-pull-request` | Media | Mensajes de `ErrorCarga` en inglés (texto de Pydantic). | **Aceptado** (`2e7ec1e` test, `558308b` fix) |
+| R3 | `revisor-pull-request` | Media | Un nombre sin letras ni dígitos produce un slug vacío y un error de BD sin formato. | **Aceptado** (`2e7ec1e` test, `558308b` fix) |
+| R4 | `revisor-pull-request` | Media | Con un filtro inválido en la URL, «Reintentar» repite el 422 y el turista queda atrapado. | **Aceptado** (`2e7ec1e` test, `558308b` fix) |
 | R5a | `revisor-pull-request` | Media | La lista muestra el precio del museo como precio del Desierto de la Tatacoa. | **Descartado:** decisión del grupo D-1; la ficha muestra el concepto «Entrada Museo de Historia Natural». |
 | R5b | `revisor-pull-request` | Media | Sin evidencia de la consulta de los precios de Termales de Rivera. | **Descartado:** el `curador-datos` los consultó el 2026-11-24 en el sitio oficial, que figura como fuente de la ficha. |
-| R6 | `revisor-pull-request` | Media | Las pruebas borran tablas aunque `DATABASE_URL_PRUEBAS` apunte por error a otra base. | **Aceptado** (pendiente de commit) |
-| R7 | `revisor-pull-request` | Baja | Un precio sin fecha se mostraría sin «aprox.». | **Aceptado** (pendiente de commit) |
-| R8 | `revisor-pull-request` | Baja | Si `/api/filtros` falla, no hay aviso. | **Aceptado** (pendiente de commit) |
-| R9 | `revisor-pull-request` | Baja | `track p.concepto` duplica claves si se repite un concepto. | **Aceptado** (pendiente de commit) |
-| R10 | `revisor-pull-request` | Baja | Los enlaces a otra pestaña no avisan a los lectores de pantalla. | **Aceptado** (pendiente de commit) |
+| R6 | `revisor-pull-request` | Media | Las pruebas borran tablas aunque `DATABASE_URL_PRUEBAS` apunte por error a otra base. | **Aceptado** (`2e7ec1e` test, `558308b` fix) |
+| R7 | `revisor-pull-request` | Baja | Un precio sin fecha se mostraría sin «aprox.». | **Aceptado** (`2e7ec1e` test, `558308b` fix) |
+| R8 | `revisor-pull-request` | Baja | Si `/api/filtros` falla, no hay aviso. | **Aceptado** (`2e7ec1e` test, `558308b` fix) |
+| R9 | `revisor-pull-request` | Baja | `track p.concepto` duplica claves si se repite un concepto. | **Aceptado** (`558308b`, sin prueba automática: cambio de marcado o documentación) |
+| R10 | `revisor-pull-request` | Baja | Los enlaces a otra pestaña no avisan a los lectores de pantalla. | **Aceptado** (`558308b`, sin prueba automática: cambio de marcado o documentación) |
 | R11 | `revisor-pull-request` | Baja | La lista navega aunque los filtros no cambien. | **Descartado:** usa `replaceUrl`, no deja rastro en el historial ni tiene efecto visible (YAGNI). |
-| R12 | `revisor-pull-request` | Baja | `match="nombre\|slug"` es poco estricto. | **Aceptado** (pendiente de commit) |
+| R12 | `revisor-pull-request` | Baja | `match="nombre\|slug"` es poco estricto. | **Aceptado** (`2e7ec1e` test, `558308b` fix) |
 | R13 | `revisor-pull-request` | Sug. | Faltan pruebas de la recarga y del 422 en el frontend. | **Aceptado:** cubierto por las pruebas de R1 y R4. |
-| R14 | `revisor-pull-request` | Sug. | `frontend/README.md` es el de `ng new`. | **Aceptado** (pendiente de commit) |
-| S1 | `revisor-seguridad` | Media | `?q=%00` provoca un 500 en vez de un 422. | **Aceptado** (pendiente de commit) |
-| S2 | `revisor-seguridad` | Media | `municipio` y `categoria` sin largo máximo; el 422 repite el valor completo. | **Aceptado** (pendiente de commit) |
-| S3 | `revisor-seguridad` | Media | `001_esquema.sql` empieza con `DROP TABLE` y lo usa la carga. | **Aceptado** con R1 (pendiente de commit) |
-| S4 | `revisor-seguridad` | Baja | `horario`, `como_llegar` y las URL de fuentes sin largo máximo. | **Aceptado** (pendiente de commit) |
-| S5 | `revisor-seguridad` | Baja | `*` en `ORIGENES_PERMITIDOS` abriría CORS. | **Aceptado:** aviso en `.env.example` (pendiente de commit) |
+| R14 | `revisor-pull-request` | Sug. | `frontend/README.md` es el de `ng new`. | **Aceptado** (`558308b`, sin prueba automática: cambio de marcado o documentación) |
+| S1 | `revisor-seguridad` | Media | `?q=%00` provoca un 500 en vez de un 422. | **Aceptado** (`2e7ec1e` test, `558308b` fix) |
+| S2 | `revisor-seguridad` | Media | `municipio` y `categoria` sin largo máximo; el 422 repite el valor completo. | **Aceptado** (`2e7ec1e` test, `558308b` fix) |
+| S3 | `revisor-seguridad` | Media | `001_esquema.sql` empieza con `DROP TABLE` y lo usa la carga. | **Aceptado** con R1 (`558308b`) |
+| S4 | `revisor-seguridad` | Baja | `horario`, `como_llegar` y las URL de fuentes sin largo máximo. | **Aceptado** (`2e7ec1e` test, `558308b` fix) |
+| S5 | `revisor-seguridad` | Baja | `*` en `ORIGENES_PERMITIDOS` abriría CORS. | **Aceptado:** aviso en `.env.example` (`558308b`) |
 | S6 | `revisor-seguridad` | Baja | `/docs`, `/redoc` y `/openapi.json` públicos. | **Descartado:** API pública de solo lectura, sin secretos; el contrato ya es público en el repositorio y `/docs` sirve al curso. |
-| S7 | `revisor-seguridad` | Baja | Los errores inesperados no siguen el formato `{"detalle": …}`. | **Aceptado** (pendiente de commit) |
+| S7 | `revisor-seguridad` | Baja | Los errores inesperados no siguen el formato `{"detalle": …}`. | **Aceptado** (`2e7ec1e` test, `558308b` fix) |
