@@ -21,6 +21,7 @@ fuente y enlace al mapa.
   (`/sitios/desierto-de-la-tatacoa`); el nombre de cada sitio es único.
 - Q: Si un sitio tiene varios precios, ¿cuál se muestra en la lista? → A: El menor de los precios conocidos,
   como «desde»: `Desde $15.000 COP (aprox., consultado en nov. 2026)`; con un solo precio no se antepone «Desde».
+  Si el menor es 0, se muestra «Gratis (hay otras tarifas)» (ajuste tras `/speckit-analyze`, hallazgo I1).
 
 ## Escenarios de usuario y pruebas *(obligatorio)*
 
@@ -45,7 +46,8 @@ sitios con esos cuatro datos.
 3. **CA-3. Dado** un sitio sin precio conocido, **cuando** aparece en la lista o en su ficha, **entonces** se
    muestra «Precio no disponible» y nunca «$0».
 4. **CA-4. Dado** un sitio cuya entrada es gratuita (precio conocido igual a 0), **cuando** se muestra,
-   **entonces** aparece «Gratis», distinto de «Precio no disponible».
+   **entonces** aparece «Gratis», distinto de «Precio no disponible». Si además tiene otros precios mayores,
+   en la lista aparece «Gratis (hay otras tarifas)».
 5. **CA-5. Dado** que el catálogo todavía se está cargando, no tiene sitios o no se pudo obtener, **cuando** el
    turista abre la lista, **entonces** ve respectivamente un aviso de carga, el mensaje «No hay sitios para
    mostrar» o un mensaje de error en español con la opción de reintentar.
@@ -140,7 +142,9 @@ que las inválidas se rechazan.
 - Nombre de búsqueda vacío o solo con espacios: se trata como «sin búsqueda» y se muestran todos los sitios.
 - Texto de búsqueda muy largo (más de 100 caracteres): se rechaza con un mensaje claro.
 - Sitio con varios precios (adulto, niño, extranjero): en la lista se muestra el menor antecedido de «Desde»;
-  en la ficha se muestran todos con su concepto.
+  en la ficha se muestran todos con su concepto. Si el menor es gratis (0), la lista muestra «Gratis (hay otras
+  tarifas)» en lugar de «Desde Gratis».
+- Nombre de sitio de más de 120 caracteres o concepto de precio de más de 80: la ficha se rechaza al cargar.
 - Sitio con unos precios conocidos y otros no: solo se muestran los conocidos; si ninguno lo es, «Precio no
   disponible».
 - Fuente que ya no responde: el enlace se muestra igual; verificar fuentes caídas queda fuera de esta spec.

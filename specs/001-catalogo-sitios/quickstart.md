@@ -41,4 +41,9 @@ cd frontend ; npx ng serve                          # app en http://localhost:42
 4. `http://localhost:4200/sitios/no-existe`: aparece «Sitio no encontrado» (CA-9).
 5. `http://localhost:8000/api/sitios?municipio=xyz`: responde 422 con un mensaje en español (CA-15).
 6. Herramientas del navegador a 360 px de ancho: sin desplazamiento horizontal en la lista y la ficha (CE-005).
-7. Navegar la lista y la ficha solo con Tab y Enter (RF-011).
+7. Navegar la lista y la ficha solo con Tab y Enter, y comprobar con la herramienta de accesibilidad del
+   navegador (Lighthouse o el selector de color) que el texto cumple contraste AA (RF-011).
+8. Cronometrar a una persona que no conoce la app: desde abrir `/sitios` hasta abrir la ficha de un sitio que se le
+   nombra, en menos de 30 s (CE-001).
+9. En la pestaña Red de las herramientas del navegador, con la limitación «4G lenta» activa, recargar la lista y una
+   ficha: el contenido completo aparece en menos de 2 s (CE-004).

@@ -83,13 +83,15 @@ Cada sitio tiene ≥ 1 fuente (se valida al cargar).
 `backend/datos/municipios.json`: `{"fuente": "https://…", "municipios": [{"clave": "neiva", "nombre": "Neiva"}, …]}`.
 
 ## Reglas de rechazo al cargar (CA-17 a CA-19)
-1. Falta `nombre`, `municipio`, `categoria`, `latitud`, `longitud` o `fuentes` vacío.
+1. Falta `nombre`, `municipio`, `categoria`, `latitud`, `longitud` o `fuentes` vacío; `nombre` de más de 120
+   caracteres.
 2. `municipio` no está entre las 37 claves; `categoria` no está entre las 7.
 3. Coordenadas fuera de los bordes (inclusivos).
 4. `valor_cop` negativo o no entero.
 5. Hay al menos un precio conocido y falta `fecha_referencia_precio` (formato `AAAA-MM-DD`).
 6. Dos fichas con el mismo `nombre` o el mismo `slug`.
-7. `fuentes` con una URL que no empieza por `http://` o `https://`; `descripcion` > 400 caracteres.
+7. `fuentes` con una URL que no empieza por `http://` o `https://`; `descripcion` > 400 caracteres;
+   `concepto` de un precio vacío o > 80 caracteres.
 
 Si una ficha falla, no se guarda ninguna.
 

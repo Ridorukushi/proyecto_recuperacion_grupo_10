@@ -183,4 +183,4 @@ frontend empiezan con `CA-n`.
 
 | Excepción | Por qué se necesita | Alternativa más simple descartada porque |
 |---|---|---|
-| El orquestador escribe archivos (configuración, `ng new`, `ci.yml`, `AGENTS.md`), aunque `AGENTS.md` dice que «coordina, no programa». | Los hooks impiden a los subagentes instalar dependencias, crear el proyecto Angular y tocar `.github/`. | Ampliar los permisos de los agentes debilita el control que exige el principio IV (decisión del grupo, 2026-11-24). El orquestador no escribe lógica ni pruebas. |
+| El orquestador escribe archivos (configuración, `ng new`, `ci.yml`, `AGENTS.md`, la skill `datos-turisticos` y la regla `frontend-angular.md`), aunque `AGENTS.md` dice que «coordina, no programa». | Los hooks impiden a los subagentes instalar dependencias, crear el proyecto Angular y tocar `.github/`. | Ampliar los permisos de los agentes debilita el control que exige el principio IV (decisión del grupo, 2026-11-24). El orquestador no escribe lógica ni pruebas. |
