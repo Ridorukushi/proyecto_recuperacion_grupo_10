@@ -19,7 +19,7 @@ function mesYAnio(fecha: string): string {
 export function formatearPrecio(valorCop: number | null, fecha: string | null): string {
   if (valorCop === null) return NO_DISPONIBLE;
   if (valorCop === 0) return 'Gratis';
-  const consulta = fecha ? ` (aprox., consultado en ${mesYAnio(fecha)})` : '';
+  const consulta = fecha ? ` (aprox., consultado en ${mesYAnio(fecha)})` : ' (aprox.)';
   return `$${conMiles(valorCop)} COP${consulta}`;
 }
 

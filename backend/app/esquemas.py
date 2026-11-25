@@ -31,9 +31,9 @@ class FichaSitio(BaseModel):
     longitud: float = Field(ge=-76.6, le=-74.4)
     precios: list[PrecioFicha] = []
     fecha_referencia_precio: date | None = None
-    horario: str | None = None
-    como_llegar: str | None = None
-    fuentes: list[str] = Field(min_length=1)
+    horario: Annotated[str, StringConstraints(max_length=200)] | None = None
+    como_llegar: Annotated[str, StringConstraints(max_length=500)] | None = None
+    fuentes: list[Annotated[str, StringConstraints(max_length=500)]] = Field(min_length=1)
 
     @field_validator("categoria")
     @classmethod

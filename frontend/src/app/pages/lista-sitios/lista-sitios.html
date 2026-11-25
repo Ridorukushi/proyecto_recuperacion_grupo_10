@@ -27,14 +27,23 @@
   </div>
 </form>
 
+@if (errorFiltros()) {
+  <p class="aviso">No se pudieron cargar los filtros. La lista sigue disponible.</p>
+}
+
 @switch (estado()) {
   @case ('cargando') {
     <p role="status">Cargando sitios…</p>
   }
   @case ('error') {
     <section role="alert">
-      <p>No se pudo cargar la lista de sitios. Intenta de nuevo.</p>
-      <button type="button" (click)="cargar()">Reintentar</button>
+      @if (detalleError()) {
+        <p>{{ detalleError() }}</p>
+        <button type="button" (click)="limpiar()">Limpiar filtros</button>
+      } @else {
+        <p>No se pudo cargar la lista de sitios. Intenta de nuevo.</p>
+        <button type="button" (click)="cargar()">Reintentar</button>
+      }
     </section>
   }
   @case ('listo') {

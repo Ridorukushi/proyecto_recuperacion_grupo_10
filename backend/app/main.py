@@ -1,5 +1,7 @@
 """Aplicación FastAPI: CORS, errores en español con la forma {"detalle": ...} y rutas."""
 
+import logging
+
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,6 +10,8 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.config import obtener_configuracion
 from app.rutas import sitios
+
+registro = logging.getLogger(__name__)
 
 app = FastAPI(title="Catálogo de sitios turísticos del Huila", version="0.1.0")
 
@@ -32,6 +36,12 @@ async def _error_http(_: Request, error: StarletteHTTPException) -> JSONResponse
 @app.exception_handler(RequestValidationError)
 async def _error_validacion(_: Request, __: RequestValidationError) -> JSONResponse:
     return JSONResponse({"detalle": "Los datos enviados no son válidos."}, status_code=422)
+
+
+@app.exception_handler(Exception)
+async def _error_interno(_: Request, error: Exception) -> JSONResponse:
+    registro.error("Error inesperado", exc_info=error)
+    return JSONResponse({"detalle": "Error interno. Intenta más tarde."}, status_code=500)
 
 
 app.include_router(sitios.router)

@@ -31,6 +31,10 @@ export class ListaSitios {
   protected readonly categoria = signal('');
   protected readonly q = signal('');
 
+  protected readonly errorFiltros = signal(false);
+  /** Mensaje del servidor cuando responde 422 (filtros inválidos); vacío en otros errores. */
+  protected readonly detalleError = signal('');
+
   protected readonly tarjetas = signal<SitioResumen[]>([]);
   protected readonly hayFiltros = computed(() => !!(this.municipio() || this.categoria() || this.q().trim()));
 
@@ -50,7 +54,7 @@ export class ListaSitios {
     this.servicio
       .filtros()
       .pipe(takeUntilDestroyed())
-      .subscribe({ next: (f) => this.filtros.set(f), error: () => undefined });
+      .subscribe({ next: (f) => this.filtros.set(f), error: () => this.errorFiltros.set(true) });
     this.cargar();
   }
 
@@ -97,7 +101,13 @@ export class ListaSitios {
         this.tarjetas.set(sitios);
         this.estado.set('listo');
       },
-      error: () => this.estado.set('error'),
+      error: (error: unknown) => {
+        const detalle = (error as { status?: number; error?: { detalle?: unknown } }) ?? {};
+        this.detalleError.set(
+          detalle.status === 422 && typeof detalle.error?.detalle === 'string' ? detalle.error.detalle : '',
+        );
+        this.estado.set('error');
+      },
     });
   }
 }

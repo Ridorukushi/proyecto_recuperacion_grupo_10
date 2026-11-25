@@ -15,11 +15,18 @@ def crear_motor(url: str) -> Engine:
     return create_engine(url)
 
 
-def crear_esquema(motor: Engine) -> None:
-    """Borra y recrea las tablas con backend/db/001_esquema.sql."""
+def asegurar_esquema(motor: Engine) -> None:
+    """Crea las tablas con backend/db/001_esquema.sql si no existen (no borra nada)."""
     sql = RUTA_ESQUEMA.read_text(encoding="utf-8")
     with motor.begin() as conexion:
         conexion.exec_driver_sql(sql)
+
+
+def crear_esquema(motor: Engine) -> None:
+    """Solo para pruebas: borra las tablas y las recrea vacías."""
+    with motor.begin() as conexion:
+        conexion.exec_driver_sql("DROP TABLE IF EXISTS fuente, precio, sitio, municipio CASCADE")
+    asegurar_esquema(motor)
 
 
 @lru_cache

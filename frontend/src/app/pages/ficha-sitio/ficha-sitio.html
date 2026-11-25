@@ -35,7 +35,7 @@
           <p>Precio no disponible</p>
         } @else {
           <ul class="precios">
-            @for (p of precios(); track p.concepto) {
+            @for (p of precios(); track $index) {
               <li>{{ p.concepto }}: {{ p.texto }}</li>
             }
           </ul>
@@ -48,13 +48,13 @@
         <p>{{ s.como_llegar ?? 'No disponible' }}</p>
 
         <p>
-          <a [href]="urlMapa()" target="_blank" rel="noopener noreferrer">Ver en mapa</a>
+          <a [href]="urlMapa()" target="_blank" rel="noopener noreferrer">Ver en mapa<span class="visualmente-oculto"> (se abre en otra pestaña)</span></a>
         </p>
 
         <h2>Fuentes</h2>
         <ul>
           @for (url of s.fuentes; track url) {
-            <li><a [href]="url" target="_blank" rel="noopener noreferrer">{{ url }}</a></li>
+            <li><a [href]="url" target="_blank" rel="noopener noreferrer">{{ url }}<span class="visualmente-oculto"> (se abre en otra pestaña)</span></a></li>
           }
         </ul>
       </article>

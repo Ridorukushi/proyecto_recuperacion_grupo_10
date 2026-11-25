@@ -23,7 +23,9 @@ from app.texto import normalizar
 router = APIRouter(prefix="/api")
 
 MAX_BUSQUEDA = 100
-PATRON_SLUG = re.compile(r"^[a-z0-9-]{1,120}$")
+MAX_CLAVE = 60
+PATRON_CLAVE = re.compile(r"^[a-z0-9-]+$")
+PATRON_SLUG =re.compile(r"^[a-z0-9-]{1,120}$")
 
 
 def _opcion_categoria(clave: str) -> Opcion:
@@ -78,8 +80,18 @@ def listar_sitios(
     categoria: Annotated[str | None, Query()] = None,
     q: Annotated[str | None, Query()] = None,
 ):
-    if q is not None and len(q) > MAX_BUSQUEDA:
-        raise HTTPException(422, f"El parámetro «q» no puede superar los {MAX_BUSQUEDA} caracteres.")
+    if q is not None:
+        if len(q) > MAX_BUSQUEDA:
+            raise HTTPException(422, f"El parámetro «q» no puede superar los {MAX_BUSQUEDA} caracteres.")
+        if any(ord(c) < 32 or ord(c) == 127 for c in q):
+            raise HTTPException(422, "El parámetro «q» contiene caracteres no permitidos.")
+    for nombre, valor in (("municipio", municipio), ("categoria", categoria)):
+        if valor and (len(valor) > MAX_CLAVE or not PATRON_CLAVE.fullmatch(valor)):
+            raise HTTPException(
+                422,
+                f"El parámetro «{nombre}» no es válido: use hasta {MAX_CLAVE} caracteres "
+                "entre minúsculas, números y guiones.",
+            )
     if categoria and categoria not in CATEGORIAS:
         raise HTTPException(
             422,
