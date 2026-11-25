@@ -70,6 +70,8 @@ se mantiene al aplicar los filtros de municipio, categoría y búsqueda.
 ### Casos límite
 
 - Catálogo vacío o filtros sin resultados: el orden no cambia los mensajes existentes de la spec 001.
+- Dirección compartida con un orden inválido (por ejemplo `?orden=xyz`): se muestra el mensaje de error del
+  servidor con «Limpiar filtros», como cualquier filtro inválido de la spec 001.
 - Todos los sitios sin precio: con orden por precio la lista queda igual que con orden por nombre.
 - Un sitio con varios precios se ordena por su precio de referencia (el menor conocido), el mismo que ya muestra
   la lista.

@@ -4,6 +4,8 @@
 
 **Entrada**: spec aprobada en `specs/002-ordenar-por-precio/spec.md`.
 
+**Estado**: Aprobado (2026-11-25).
+
 ## Resumen
 Se agrega el parámetro `orden` (`nombre` | `precio`) a `GET /api/sitios`. El backend ordena por precio de
 referencia en memoria, con los sitios sin precio al final. En el frontend, la pantalla de lista suma un selector
