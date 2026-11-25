@@ -162,3 +162,9 @@ Fase 4: base T027–T032 ──► US4 (T033) ──► US1 (T034–T036) ──
 ## Estrategia
 - **MVP:** base común + US4 + US1 + US2, es decir, catálogo real, lista y ficha (todas P1). US3 (filtros) completa la spec.
 - Un solo PR para toda la spec 001, como pide el flujo del proyecto; los commits siguen el orden test → feat.
+
+---
+
+## Phase 7: Convergence
+
+- [ ] T052 Verificar a mano con el catálogo real los escenarios 6 a 9 de `quickstart.md` (360 px sin desplazamiento horizontal, navegación con teclado, contraste AA, encontrar un sitio en menos de 30 s y carga en menos de 2 s con «4G lenta») y anotar el resultado en `revision.md` per CE-001, CE-004, CE-005, RF-011 (partial)
