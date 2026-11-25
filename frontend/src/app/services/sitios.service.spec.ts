@@ -63,6 +63,22 @@ describe('SitiosService', () => {
     expect(await resultado).toEqual(sitios);
   });
 
+  it('CA-7 (spec 002) listar con orden precio envía orden=precio', async () => {
+    const resultado = firstValueFrom(from(servicio.listar({ orden: 'precio' } as never)));
+    const { req, params } = esperar('/api/sitios');
+    expect(params.get('orden')).toBe('precio');
+    req.flush([]);
+    await resultado;
+  });
+
+  it('CA-7 (spec 002) listar con orden nombre no envía el parámetro orden', async () => {
+    const resultado = firstValueFrom(from(servicio.listar({ orden: 'nombre' } as never)));
+    const { req, params } = esperar('/api/sitios');
+    expect(params.has('orden')).toBe(false);
+    req.flush([]);
+    await resultado;
+  });
+
   it('CA-20 obtener pide la ficha por slug', async () => {
     const resultado = firstValueFrom(from(servicio.obtener('desierto-de-la-tatacoa')));
     const { req } = esperar('/api/sitios/desierto-de-la-tatacoa');
