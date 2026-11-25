@@ -45,8 +45,14 @@ inventado (incluida una alucinación del modelo) es un defecto grave.
 - Cada sesión de trabajo con IA se registra en `docs/prompts/` con el prompt textual, lo que hizo
   el agente y el commit resultante.
 - Commits pequeños, en español, con prefijo convencional (`feat:`, `fix:`, `docs:`, `chore:`,
-  `test:`, `refactor:`). El trabajo se hace en `recuperacion/olaya` y llega a `main` por
-  Pull Request.
+  `test:`, `refactor:`).
+- Ramas: cada spec se construye en `feat/NNN-nombre`, que sale de `recuperacion/olaya` y vuelve a ella
+  por Pull Request. `recuperacion/olaya` llega a `main` por Pull Request. Ningún agente fusiona.
+- Separación de roles (TDD): el subagente `probador` escribe las pruebas antes del código (Red) y se
+  suben en su propio commit; el `implementador` escribe el código mínimo que las hace pasar (Green).
+  Los límites de cada agente los hacen cumplir hooks, no solo instrucciones.
+- Cada spec deja evidencia en su carpeta: `prompt.md`, `skills.md` y `revision.md`, además de
+  `spec.md`, `plan.md` y `tasks.md`.
 - Todo el código se escribe en este repositorio; no se copia código de otros repositorios.
 
 **Razón:** la trazabilidad prompt → spec → commit es el entregable central del curso.
@@ -90,4 +96,4 @@ inventado (incluida una alucinación del modelo) es un defecto grave.
 - `/speckit-plan` verifica el cumplimiento de estos principios en su "Constitution Check"; toda
   excepción se justifica por escrito en el plan.
 
-**Version**: 1.0.0 | **Ratified**: 2026-11-24 | **Last Amended**: 2026-11-24
+**Version**: 1.1.0 | **Ratified**: 2026-11-24 | **Last Amended**: 2026-11-24
