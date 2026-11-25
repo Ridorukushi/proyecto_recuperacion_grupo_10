@@ -92,8 +92,15 @@ Cada sitio tiene ≥ 1 fuente (se valida al cargar).
 6. Dos fichas con el mismo `nombre` o el mismo `slug`.
 7. `fuentes` con una URL que no empieza por `http://` o `https://`; `descripcion` > 400 caracteres;
    `concepto` de un precio vacío o > 80 caracteres.
+8. `horario` > 200 caracteres, `como_llegar` > 500 caracteres o una URL de `fuentes` > 500 caracteres
+   (hallazgo S4 de la revisión).
+9. `nombre` sin ninguna letra ni dígito: produciría un `slug` vacío (hallazgo R3).
 
-Si una ficha falla, no se guarda ninguna.
+Si una ficha falla, no se guarda ninguna. Los mensajes de `ErrorCarga` están en español e incluyen el nombre del
+campo (hallazgo R2). La recarga completa (`python -m app.carga`) valida todo **antes** de tocar la base y hace el
+borrado y la carga en una sola transacción: si algo falla, el catálogo anterior queda intacto (hallazgo R1).
+`001_esquema.sql` no borra tablas; el borrado solo ocurre en la recarga y en las pruebas, y las pruebas se niegan a
+correr si el nombre de la base no contiene «prueba» (hallazgos S3 y R6).
 
 ## Estados
 Sin transiciones: el catálogo es de solo lectura y se recarga completo.

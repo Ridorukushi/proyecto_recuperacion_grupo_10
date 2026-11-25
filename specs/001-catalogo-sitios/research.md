@@ -83,6 +83,12 @@ Cada decisión resuelve una incógnita del contexto técnico o un hueco del info
 - **Decisión:** manejadores propios para `RequestValidationError` (422) y `HTTPException` (404). Cuerpo:
   `{"detalle": "<mensaje en español>"}`, sin `loc`, trazas ni SQL.
   Ejemplos: `El municipio «xyz» no existe en el Huila.`, `Sitio no encontrado.`
+- Ajustes tras la revisión:
+  - **S1 y S2:** `municipio` y `categoria` aceptan como máximo 60 caracteres con el patrón `^[a-z0-9-]+$`; `q`
+    no acepta caracteres de control. Todo lo demás responde 422, y el mensaje nunca repite un valor de más de
+    60 caracteres.
+  - **S7:** cualquier error inesperado responde 500 con `{"detalle": "Error interno. Intenta más tarde."}`.
+  - **R4:** en el frontend, un 422 muestra el `detalle` del servidor junto con «Limpiar filtros».
 
 ## D12. Frontend (H18, H22, H8)
 - **Decisión:** Angular 21 creado con `ng new`; desde la versión 21 `ng test` usa vitest, así que el
