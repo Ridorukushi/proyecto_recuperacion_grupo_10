@@ -1,0 +1,63 @@
+<p><a routerLink="/sitios">&larr; Volver a la lista</a></p>
+
+@switch (estado()) {
+  @case ('cargando') {
+    <p role="status">Cargando sitio…</p>
+  }
+  @case ('no-encontrado') {
+    <section role="alert">
+      <h1>Sitio no encontrado</h1>
+      <p>No existe un sitio con esa dirección.</p>
+    </section>
+  }
+  @case ('error') {
+    <section role="alert">
+      <h1>No se pudo cargar el sitio</h1>
+      <p>Hubo un problema al consultar la información. Intenta de nuevo.</p>
+      <button type="button" (click)="reintentar()">Reintentar</button>
+    </section>
+  }
+  @case ('listo') {
+    @if (sitio(); as s) {
+      <article>
+        <h1>{{ s.nombre }}</h1>
+        <p class="etiquetas">
+          <span>{{ s.municipio.etiqueta }}</span>
+          <span>{{ s.categoria.etiqueta }}</span>
+        </p>
+
+        @if (s.descripcion) {
+          <p>{{ s.descripcion }}</p>
+        }
+
+        <h2>Precios</h2>
+        @if (precios().length === 0) {
+          <p>Precio no disponible</p>
+        } @else {
+          <ul class="precios">
+            @for (p of precios(); track p.concepto) {
+              <li>{{ p.concepto }}: {{ p.texto }}</li>
+            }
+          </ul>
+        }
+
+        <h2>Horario</h2>
+        <p>{{ s.horario ?? 'No disponible' }}</p>
+
+        <h2>Cómo llegar</h2>
+        <p>{{ s.como_llegar ?? 'No disponible' }}</p>
+
+        <p>
+          <a [href]="urlMapa()" target="_blank" rel="noopener noreferrer">Ver en mapa</a>
+        </p>
+
+        <h2>Fuentes</h2>
+        <ul>
+          @for (url of s.fuentes; track url) {
+            <li><a [href]="url" target="_blank" rel="noopener noreferrer">{{ url }}</a></li>
+          }
+        </ul>
+      </article>
+    }
+  }
+}
