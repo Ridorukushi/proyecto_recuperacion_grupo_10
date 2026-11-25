@@ -48,4 +48,5 @@ export interface FiltrosLista {
   municipio?: string;
   categoria?: string;
   q?: string;
+  orden?: 'nombre' | 'precio';
 }

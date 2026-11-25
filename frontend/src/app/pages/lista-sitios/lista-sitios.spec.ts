@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, TestRequest, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { ListaSitios } from './lista-sitios';
 
 const TATACOA = {
@@ -53,6 +53,7 @@ describe('ListaSitios', () => {
   const esFiltros = (r: TestRequest['request']) =>
     r.method === 'GET' && new URL(r.urlWithParams, 'http://x').pathname === '/api/filtros';
   const parametros = (t: TestRequest) => new URL(t.request.urlWithParams, 'http://x').searchParams;
+  const parametros2 = (r: TestRequest['request']) => new URL(r.urlWithParams, 'http://x').searchParams;
   const pausa = () => new Promise<void>((resolver) => setTimeout(resolver, 0));
   const host = () => fixture.nativeElement as HTMLElement;
   const texto = () => host().textContent ?? '';
@@ -270,6 +271,83 @@ describe('ListaSitios', () => {
     expect(texto()).toContain('No se pudieron cargar los filtros');
     expect(texto()).toContain('Desierto de la Tatacoa');
     expect(texto()).toContain('Balneario Termal Los Lagos');
+  });
+
+  function selectOrden(): HTMLSelectElement {
+    const s = host().querySelector<HTMLSelectElement>('select#orden');
+    expect(s, 'no hay un <select id="orden">').toBeTruthy();
+    return s as HTMLSelectElement;
+  }
+
+  async function elegirOrden(valor: string): Promise<void> {
+    const s = selectOrden();
+    s.value = valor;
+    s.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  it('CA-5 (spec 002) hay selector «Ordenar por» con nombre elegido y sin orden en la petición', async () => {
+    fixture = TestBed.createComponent(ListaSitios);
+    fixture.detectChanges();
+    const lista = await esperarPeticiones(esLista);
+    expect(parametros(lista[0]).has('orden')).toBe(false);
+    lista.forEach((t) => t.flush([TATACOA]));
+    http.match(esFiltros).forEach((t) => t.flush(FILTROS));
+    await asentar();
+
+    const s = selectOrden();
+    const etiqueta = host().querySelector('label[for="orden"]');
+    expect(etiqueta?.textContent?.trim()).toBe('Ordenar por');
+    expect(Array.from(s.options).map((o) => [o.value, o.textContent?.trim()])).toEqual([
+      ['nombre', 'Nombre (A–Z)'],
+      ['precio', 'Precio (de menor a mayor)'],
+    ]);
+    expect(s.value).toBe('nombre');
+  });
+
+  it('CA-6/CA-7 (spec 002) al elegir precio la petición lleva orden=precio y conserva el municipio', async () => {
+    await abrirConSitios([TATACOA, BALNEARIO]);
+
+    const municipio = selectConOpcion('neiva');
+    municipio.value = 'neiva';
+    municipio.dispatchEvent(new Event('change', { bubbles: true }));
+    const conMunicipio = await esperarPeticiones((r) => esLista(r) && parametros2(r).get('municipio') === 'neiva');
+    conMunicipio.forEach((t) => t.flush([BALNEARIO]));
+    await asentar();
+
+    await elegirOrden('precio');
+    const conOrden = await esperarPeticiones((r) => esLista(r) && parametros2(r).get('orden') === 'precio');
+    expect(parametros(conOrden[0]).get('orden')).toBe('precio');
+    expect(parametros(conOrden[0]).get('municipio')).toBe('neiva');
+    conOrden.forEach((t) => t.flush([BALNEARIO]));
+    await asentar();
+    expect(selectOrden().value).toBe('precio');
+  });
+
+  it('CA-7 (spec 002) con ?orden=precio en la URL la petición inicial lleva orden=precio y el select lo muestra', async () => {
+    await TestBed.inject(Router).navigateByUrl('/?orden=precio');
+    fixture = TestBed.createComponent(ListaSitios);
+    fixture.detectChanges();
+    const lista = await esperarPeticiones(esLista);
+    expect(parametros(lista[0]).get('orden')).toBe('precio');
+    lista.forEach((t) => t.flush([TATACOA]));
+    http.match(esFiltros).forEach((t) => t.flush(FILTROS));
+    await asentar();
+    expect(selectOrden().value).toBe('precio');
+  });
+
+  it('CA-9 (spec 002) «Limpiar filtros» devuelve el orden a nombre y la petición no lleva orden', async () => {
+    await abrirConSitios([TATACOA, BALNEARIO]);
+    await elegirOrden('precio');
+    const conOrden = await esperarPeticiones((r) => esLista(r) && parametros2(r).get('orden') === 'precio');
+    conOrden.forEach((t) => t.flush([]));
+    await asentar();
+
+    botonConTexto(/Limpiar filtros/).click();
+    const sinOrden = await esperarPeticiones((r) => esLista(r) && !parametros2(r).has('orden'));
+    expect(parametros(sinOrden[0]).has('orden')).toBe(false);
+    sinOrden.forEach((t) => t.flush([TATACOA, BALNEARIO]));
+    await asentar();
+    expect(selectOrden().value).toBe('nombre');
   });
 
   it('CA-10 ofrece los municipios y categorías que entrega la API', async () => {

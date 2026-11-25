@@ -25,6 +25,14 @@
       }
     </select>
   </div>
+
+  <div class="campo">
+    <label for="orden">Ordenar por</label>
+    <select id="orden" (change)="elegirOrden($event)">
+      <option value="nombre" [selected]="orden() === 'nombre'">Nombre (A–Z)</option>
+      <option value="precio" [selected]="orden() === 'precio'">Precio (de menor a mayor)</option>
+    </select>
+  </div>
 </form>
 
 @if (errorFiltros()) {
