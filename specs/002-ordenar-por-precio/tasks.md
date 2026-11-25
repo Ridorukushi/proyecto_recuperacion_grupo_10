@@ -18,17 +18,17 @@ código.
 
 ## Fase 1: Preparación
 
-- [ ] T001 Confirmar que las suites actuales están en verde antes de empezar (`cd backend && uv run pytest -q`, `cd frontend && npx ng test --watch=false`)
+- [X] T001 Confirmar que las suites actuales están en verde antes de empezar (`cd backend && uv run pytest -q`, `cd frontend && npx ng test --watch=false`)
 
 ---
 
 ## Fase 2: Red (pruebas primero)
 
-- [ ] T002 [P] [US1] Crear `backend/tests/test_orden.py` con CA-1, CA-2, CA-3 y CA-4 sobre `GET /api/sitios?orden=precio`, usando sitios semilla propios con precios 20.000, 10.000, 15.000, 0, un empate y dos sin precio (regla de `data-model.md`, sección «Regla de orden por precio»)
-- [ ] T003 [US2] Agregar a `backend/tests/test_orden.py` CA-5 (sin `orden` = por nombre), CA-6 (`orden=precio` con `municipio`) y CA-8 (`orden=xyz` → 422 con `{"detalle": …}` en español)
-- [ ] T004 [P] [US2] Agregar a `frontend/src/app/services/sitios.service.spec.ts` la prueba CA-7: `listar({orden: 'precio'})` envía `orden=precio` y `listar({orden: 'nombre'})` no envía el parámetro
-- [ ] T005 [P] [US2] Agregar a `frontend/src/app/pages/lista-sitios/lista-sitios.spec.ts` CA-5 (selector con etiqueta visible «Ordenar por» y «Nombre (A–Z)» elegido; RF-008), CA-6 y CA-7 (elegir precio pide `orden=precio`; abrir con `?orden=precio` en la URL lo respeta) y CA-9 («Limpiar filtros» vuelve a nombre)
-- [ ] T006 Ejecutar ambas suites, comprobar que las pruebas nuevas fallan por falta de código y hacer commit `test:` solo con las pruebas
+- [X] T002 [P] [US1] Crear `backend/tests/test_orden.py` con CA-1, CA-2, CA-3 y CA-4 sobre `GET /api/sitios?orden=precio`, usando sitios semilla propios con precios 20.000, 10.000, 15.000, 0, un empate y dos sin precio (regla de `data-model.md`, sección «Regla de orden por precio»)
+- [X] T003 [US2] Agregar a `backend/tests/test_orden.py` CA-5 (sin `orden` = por nombre), CA-6 (`orden=precio` con `municipio`) y CA-8 (`orden=xyz` → 422 con `{"detalle": …}` en español)
+- [X] T004 [P] [US2] Agregar a `frontend/src/app/services/sitios.service.spec.ts` la prueba CA-7: `listar({orden: 'precio'})` envía `orden=precio` y `listar({orden: 'nombre'})` no envía el parámetro
+- [X] T005 [P] [US2] Agregar a `frontend/src/app/pages/lista-sitios/lista-sitios.spec.ts` CA-5 (selector con etiqueta visible «Ordenar por» y «Nombre (A–Z)» elegido; RF-008), CA-6 y CA-7 (elegir precio pide `orden=precio`; abrir con `?orden=precio` en la URL lo respeta) y CA-9 («Limpiar filtros» vuelve a nombre)
+- [X] T006 Ejecutar ambas suites, comprobar que las pruebas nuevas fallan por falta de código y hacer commit `test:` solo con las pruebas
 
 **Punto de control**: CA-1 a CA-9 tienen prueba y están en rojo.
 
